@@ -12,6 +12,10 @@
 </p>
 
 <p align="center">
+  <img src="coder-agent.png" alt="Coder Agent" width="400"/>
+</p>
+
+<p align="center">
   <a href="#-quick-start">Quick Start</a> •
   <a href="#-how-it-works">How It Works</a> •
   <a href="#-commands">Commands</a> •
