@@ -125,7 +125,7 @@ Coder auto-creates the full `coder-factory/` structure and indexes your project 
   │                              │──── identify story ────────> │
   │                              │──── BUG FIX #1 ────────────> │
   │                              │                              │
-  │  validate → DONE ✅           │                              │
+  │  validate → DONE             │                              │
 ```
 
 ### Kanban Columns
@@ -188,7 +188,7 @@ Every story gets a dedicated note in `coder-notes/` with this structure:
 │ # S001 Implement user auth       │
 │ > Status | Created | Updated     │
 ├──────────────────────────────────┤
-│ USER PROMPT          ← Human    │  You write here. Coder processes
+│ USER PROMPT          ← Human     │  You write here. Coder processes
 │                      writes      │  it and clears it on state change.
 ├──────────────────────────────────┤
 │ SECTION INDEX        ← Auto      │  Quick navigation table.
