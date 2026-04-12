@@ -48,9 +48,10 @@ Coder is an **agent instruction set** that turns any LLM CLI into a disciplined 
 ### 1. Clone and copy
 
 ```bash
+cd /path/to/your/project/
 git clone https://github.com/jalopezsuarez/coder-agent.git
-cp coder-agent/{CODER.md,AGENTS.md,GEMINI.md} /path/to/your/project/
-cp -r coder-agent/.claude /path/to/your/project/
+cp coder-agent/CODER/{CODER.md,AGENTS.md,GEMINI.md} .
+cp -r coder-agent/.claude .
 ```
 
 ### 2. Launch your CLI
