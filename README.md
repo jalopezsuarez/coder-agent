@@ -132,7 +132,7 @@ Coder auto-creates the full `coder-factory/` structure and indexes your project 
 
 | Column | Owner | Description |
 |--------|-------|-------------|
-| **BACKLOG** | Coder/human | Stories created, waiting to be prioritized |
+| **BACKLOG** | Coder/Human | Stories created, waiting to be prioritized |
 | **PLAN** | Coder | Coder generates detailed plans |
 | **REVIEW** | Human | Human reviews the plan, adds feedback |
 | **EXECUTION** | Coder | Coder writes the actual code |
@@ -190,7 +190,7 @@ Every story gets a dedicated note in `coder-notes/` with this structure:
 │ # S001 Implement user auth       │
 │ > Status | Created | Updated     │
 ├──────────────────────────────────┤
-│ USER PROMPT          ← human     │  You write here. Coder processes
+│ USER PROMPT          ← Human     │  You write here. Coder processes
 │                      writes      │  it and clears it on state change.
 ├──────────────────────────────────┤
 │ TABLE OF CONTENTS    ← Auto      │  Clickable navigation index.
