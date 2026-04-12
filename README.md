@@ -325,6 +325,41 @@ At runtime, Coder auto-generates the `coder-factory/` structure in your project:
 
 ---
 
+## 🖥️ Kanban Board Manager
+
+A self-contained Kanban board manager at `coder-factory/kanban.py`. Zero external dependencies — pure Python 3.
+
+```bash
+cd coder-factory
+python3 kanban.py
+```
+
+The server starts at `http://localhost:8089`.
+
+**Board & Cards:**
+- GitHub-dark themed Kanban board with all 6 color-coded columns (BACKLOG, PLAN, REVIEW, EXECUTION, TESTING, DONE)
+- Cards display title, content preview, created/updated dates, story ID badge, and color-coded tags (#coder, #urgent, #blocked)
+- Drag & drop cards between columns — auto-saves board and updates story status and timestamp
+
+**Story Sidebar:**
+- Click any card to open a sidebar with the full story note
+- Three view modes: **Edit** (WYSIWYG), **Source** (raw Markdown), and **View** (read-only rendered)
+- Save changes with Ctrl+S / Cmd+S — scroll position preserved between mode switches
+
+**Built-in Markdown Renderer:**
+- Headers, bold, italic, strikethrough, inline code, code blocks, blockquotes
+- Ordered, unordered, and nested lists with task list support (checkboxes)
+- Tables, internal anchor links, external links, and Obsidian wiki-links (`[[S001 Title]]`)
+
+**Extras:**
+- Help modal with all Coder commands, workflow visualization, and tag reference
+- REST API (`/api/board`, `/api/note`) for reading and saving board state and notes
+- Responsive layout — sidebar goes full-width on mobile
+- Keyboard shortcuts: Escape to close, Ctrl+S / Cmd+S to save
+- Obsidian Kanban plugin compatible — preserves board settings
+
+---
+
 ## 🎯 Obsidian Integration (optional)
 
 ### Kanban Plugin
@@ -344,27 +379,6 @@ The board includes Kanban settings that auto-create new notes in the `coder-note
 {"kanban-plugin":"board","new-note-folder":"coder-notes"}
 %%
 ```
-
----
-
-## 🖥️ Kanban Board Manager
-
-A Kanban board manager included at `coder-factory/kanban.py`. No external dependencies — just Python 3.
-
-```bash
-cd coder-factory
-python3 kanban.py
-```
-
-The server starts at `http://localhost:8089` and opens the board automatically.
-
-**Features:**
-- Trello-style Kanban board with all 6 columns
-- Cards show title (2-line preview), date, tags, and iteration badges (S001 P#2 E#3)
-- Click any card to open a read-only sidebar with the full story note rendered as Markdown
-- Drag & drop cards between columns
-- Built-in help panel with all Coder commands and examples
-- Zero dependencies — pure Python 3
 
 ---
 
