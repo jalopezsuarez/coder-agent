@@ -425,8 +425,8 @@ document.addEventListener('keydown',function(e){
 
 // Markdown
 function renderMd(txt){
-  var html='',lines=txt.split('\n'),inCode=false,code=[],inList=false,lt='ul',tbl=[],inTbl=false;
-  function fl(){if(inList){html+='</'+lt+'>';inList=false;}}
+  var html='',lines=txt.split('\n'),inCode=false,code=[],inList=false,lt='ul',tbl=[],inTbl=false,ulDepth=0,ulOpen=false;
+  function fl(){if(inList){while(ulDepth>0){html+='</li></ul>';ulDepth--;}if(ulOpen){html+='</li>';ulOpen=false;}html+='</'+lt+'>';inList=false;}}
   function ft(){if(!inTbl)return;inTbl=false;if(!tbl.length)return;
     html+='<table>';
     for(var i=0;i<tbl.length;i++){var cells=tbl[i].split('|').slice(1,-1);var tg=i===0?'th':'td';
@@ -450,7 +450,7 @@ function renderMd(txt){
     if(/^>\s?/.test(l)){fl();html+='<blockquote><p>'+il(l.replace(/^>\s?/,''))+'</p></blockquote>';continue;}
     if(/^\s*[-*+]\s+\[[ xX]\]/.test(l)){if(!inList){html+='<ul>';inList=true;lt='ul';}var ck=/\[[xX]\]/.test(l);
       html+='<li class="task-item"><input type="checkbox" disabled'+(ck?' checked':'')+'> '+il(l.replace(/^\s*[-*+]\s+\[[ xX]\]\s*/,''))+'</li>';continue;}
-    if(/^\s*[-*+]\s/.test(l)){if(!inList){html+='<ul>';inList=true;lt='ul';}html+='<li>'+il(l.replace(/^\s*[-*+]\s/,''))+'</li>';continue;}
+    if(/^(\s*)[-*+]\s/.test(l)){var nd=RegExp.$1.length>=2?1:0,ct=il(l.replace(/^\s*[-*+]\s/,''));if(!inList){html+='<ul>';inList=true;lt='ul';ulDepth=0;ulOpen=false;}if(nd>ulDepth){html+='<ul><li>'+ct;ulDepth=nd;ulOpen=true;}else if(nd<ulDepth){while(ulDepth>nd){html+='</li></ul>';ulDepth--;}html+='</li><li>'+ct;ulOpen=true;}else{html+=(ulOpen?'</li>':'')+'<li>'+ct;ulOpen=true;}continue;}
     if(/^\s*\d+\.\s/.test(l)){if(!inList||lt!=='ol'){fl();html+='<ol>';inList=true;lt='ol';}html+='<li>'+il(l.replace(/^\s*\d+\.\s/,''))+'</li>';continue;}
     if(/^\s+[a-z]\.\s/.test(l)){if(!inList){html+='<ol style="list-style-type:lower-alpha">';inList=true;lt='ol';}html+='<li>'+il(l.replace(/^\s+[a-z]\.\s/,''))+'</li>';continue;}
     fl();html+='<p>'+il(l)+'</p>';
