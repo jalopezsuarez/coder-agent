@@ -1,13 +1,13 @@
 # CODER MEMORY INDEX
 > Updated: ---
-> Agent: v0.202604112034
+> Agent: v0.202604120800
 > Project: <pending-bootstrap>
 
 ## TECH STACK
 <!-- lang|version|framework|build|db|infra -->
 
 ## STRUCTURE
-<!-- folder→purpose, max 2 levels deep -->
+<!-- folder→purpose, max 2 levels -->
 
 ## MODULE REGISTRY
 <!-- module-id|path|responsibility|depends-on|status -->
