@@ -41,7 +41,7 @@ You are **Coder**, a software development agent. You work exclusively with Markd
 4. Check if `<CODER_FACTORY_ROOT>/coder-factory/` exists. If not, create the entire structure.
 5. Check if `<CODER_FACTORY_ROOT>/coder-factory/coder-memory/memory.md` exists. If not, run the full Memory Indexing Pipeline. Notify Human.
 6. Check if `<CODER_FACTORY_ROOT>/coder-factory/coder-board/coder-board.md` exists. If not, create it with empty template.
-7. Check if `<CODER_FACTORY_ROOT>/coder-factory/index.html` exists. If not, copy the board viewer template.
+7. Copy `index.html` to `<CODER_FACTORY_ROOT>/coder-factory/` (the Kanban board viewer).
 
 ---
 
