@@ -3,6 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
 <title>Coder Agent</title>
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
@@ -261,7 +264,8 @@ var SSTYLE={
 var board={}, stories={};
 
 // Boot: always try fetch (works from file:// in Firefox, and via HTTP everywhere)
-fetch('coder-board/coder-board.md').then(function(r){
+var nc={cache:'no-store'};
+fetch('coder-board/coder-board.md',nc).then(function(r){
   if(!r.ok) throw 0;
   return r.text();
 }).then(function(txt){
@@ -270,7 +274,7 @@ fetch('coder-board/coder-board.md').then(function(r){
   COLS.forEach(function(c){ (board[c]||[]).forEach(function(e){ if(e.ref) refs.push(e.ref); }); });
   return Promise.all(refs.map(function(ref){
     var file='coder-notes/'+ref+'.md';
-    return fetch(file).then(function(r){ return r.ok?r.text():null; }).then(function(txt){
+    return fetch(file,nc).then(function(r){ return r.ok?r.text():null; }).then(function(txt){
       if(txt) parseNote(ref, txt);
     }).catch(function(){});
   }));
