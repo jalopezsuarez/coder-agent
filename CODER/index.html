@@ -260,34 +260,30 @@ var SSTYLE={
 };
 var board={}, stories={};
 
-// Boot
-if(location.protocol==='file:'){
-  document.getElementById('emptyMsg').innerHTML='This viewer needs an HTTP server to read board files.<br><br>'+
-    'Run from the <code>coder-factory</code> folder:<br><br>'+
-    '<code style="display:inline-block;margin-top:2px">python3 -m http.server 8000</code><br><br>'+
-    'Then open <code>http://localhost:8000</code>';
+// Boot: always try fetch (works from file:// in Firefox, and via HTTP everywhere)
+fetch('coder-board/coder-board.md').then(function(r){
+  if(!r.ok) throw 0;
+  return r.text();
+}).then(function(txt){
+  parseBoard(txt);
+  var refs=[];
+  COLS.forEach(function(c){ (board[c]||[]).forEach(function(e){ if(e.ref) refs.push(e.ref); }); });
+  return Promise.all(refs.map(function(ref){
+    var file='coder-notes/'+ref+'.md';
+    return fetch(file).then(function(r){ return r.ok?r.text():null; }).then(function(txt){
+      if(txt) parseNote(ref, txt);
+    }).catch(function(){});
+  }));
+}).then(function(){
   render();
-} else {
-  fetch('coder-board/coder-board.md').then(function(r){
-    if(!r.ok) throw 0;
-    return r.text();
-  }).then(function(txt){
-    parseBoard(txt);
-    var refs=[];
-    COLS.forEach(function(c){ (board[c]||[]).forEach(function(e){ if(e.ref) refs.push(e.ref); }); });
-    return Promise.all(refs.map(function(ref){
-      var file='coder-notes/'+ref+'.md';
-      return fetch(file).then(function(r){ return r.ok?r.text():null; }).then(function(txt){
-        if(txt) parseNote(ref, txt);
-      }).catch(function(){});
-    }));
-  }).then(function(){
-    render();
-  }).catch(function(){
-    document.getElementById('emptyMsg').innerHTML='Could not read <code>coder-board/coder-board.md</code>';
-    render();
-  });
-}
+}).catch(function(){
+  var msg='Could not read <code>coder-board/coder-board.md</code>';
+  if(location.protocol==='file:')
+    msg+='<br><br>Chrome and Safari block local file access. Use Firefox or serve via HTTP:<br><br>'+
+      '<code>python3 -m http.server 8000</code><br><br>Then open <code>http://localhost:8000</code>';
+  document.getElementById('emptyMsg').innerHTML=msg;
+  render();
+});
 
 function parseBoard(txt){
   var col=null;
