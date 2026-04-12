@@ -56,7 +56,7 @@ body{font-family:var(--font);font-size:14px;color:var(--text);background:var(--b
 .card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:10px 12px;cursor:pointer}
 .card:hover{background:var(--card-hover);border-color:var(--text2)}
 .card-title{font-size:13px;font-weight:500;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;line-height:1.4}
-.card-preview{font-size:12px;color:var(--text2);margin-top:4px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;line-height:1.4}
+.card-preview{font-size:12px;color:var(--text2);margin-top:4px;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;line-height:1.4}
 .card-footer{display:flex;align-items:center;justify-content:space-between;margin-top:8px;gap:4px;flex-wrap:wrap}
 .card-date{font-size:11px;color:var(--text3)}
 .card-meta{display:flex;align-items:center;gap:4px;flex-wrap:wrap;justify-content:flex-end}
@@ -323,15 +323,23 @@ function parseNote(ref, txt){
 }
 
 function extractPreview(txt){
-  var lines=txt.split('\n'), inSec=false, out=[];
+  // Find the last ### INSTRUCTIONS/PLANNING/EXECUTION #N section
+  var lines=txt.split('\n'), lastStart=-1;
   for(var i=0;i<lines.length;i++){
-    var l=lines[i];
-    if(/^##\s+(INSTRUCTIONS|PLANNING|EXECUTION|USER PROMPT)/.test(l)){inSec=true;continue;}
-    if(/^##\s+/.test(l)&&inSec) break;
-    if(/^---|^<!--|^>|^#/.test(l)) continue;
-    if(inSec&&l.trim()){out.push(l.trim());if(out.length>=2)break;}
+    if(/^###\s+(INSTRUCTIONS|PLANNING|EXECUTION|BUG FIX)\s+#\d+/.test(lines[i])) lastStart=i;
   }
-  return out.join(' ').replace(/[#*_`\[\]]/g,'').substring(0,120);
+  if(lastStart===-1) return '';
+  var out=[];
+  for(var j=lastStart+1;j<lines.length;j++){
+    var l=lines[j];
+    if(/^###\s+/.test(l)) break;
+    if(/^---|^<!--/.test(l.trim())) continue;
+    if(/^#{1,4}\s+/.test(l)) continue;
+    if(!l.trim()) continue;
+    out.push(l.trim().replace(/[#*_`\[\]]/g,''));
+    if(out.length>=3) break;
+  }
+  return out.join(' ').substring(0,180);
 }
 
 function render(){
@@ -430,7 +438,11 @@ function renderMd(txt){
     if(l.trim()===''){fl();continue;}
     if(/^(\s*[-*_]\s*){3,}$/.test(l.trim())){fl();html+='<hr>';continue;}
     var hm=l.match(/^(#{1,6})\s+(.+)/);
-    if(hm){fl();html+='<h'+hm[1].length+'>'+il(hm[2])+'</h'+hm[1].length+'>';continue;}
+    if(hm){fl();var raw=hm[2],aid;
+      var im=raw.match(/^(INSTRUCTIONS|PLANNING|EXECUTION|BUG FIX)\s+#(\d+)/);
+      if(im) aid=im[1].toLowerCase().replace(/\s+/g,'-')+'-'+im[2];
+      else aid=raw.replace(/[—–]/g,'').replace(/[^\w\s-]/g,'').trim().toLowerCase().replace(/\s+/g,'-');
+      html+='<h'+hm[1].length+' id="'+esc(aid)+'">'+il(raw)+'</h'+hm[1].length+'>';continue;}
     if(/^>\s?/.test(l)){fl();html+='<blockquote><p>'+il(l.replace(/^>\s?/,''))+'</p></blockquote>';continue;}
     if(/^\s*[-*+]\s+\[[ xX]\]/.test(l)){if(!inList){html+='<ul>';inList=true;lt='ul';}var ck=/\[[xX]\]/.test(l);
       html+='<li class="task-item"><input type="checkbox" disabled'+(ck?' checked':'')+'> '+il(l.replace(/^\s*[-*+]\s+\[[ xX]\]\s*/,''))+'</li>';continue;}
@@ -449,7 +461,8 @@ function il(t){
   t=t.replace(/_(.+?)_/g,'<em>$1</em>');
   t=t.replace(/`(.+?)`/g,'<code>$1</code>');
   t=t.replace(/~~(.+?)~~/g,'<del>$1</del>');
-  t=t.replace(/\[([^\]]+)\]\(([^)]+)\)/g,'<a href="$2" target="_blank" rel="noopener">$1</a>');
+  t=t.replace(/\[([^\]]+)\]\((#[^)]+)\)/g,'<a href="$2" onclick="var el=document.getElementById(this.getAttribute(\'href\').slice(1));if(el){el.scrollIntoView({behavior:\'smooth\'});return false;}">$1</a>');
+  t=t.replace(/\[([^\]]+)\]\(([^#][^)]*)\)/g,'<a href="$2" target="_blank" rel="noopener">$1</a>');
   t=t.replace(/\[\[([^\]]+)\]\]/g,'<span style="color:var(--accent)">$1</span>');
   return t;
 }

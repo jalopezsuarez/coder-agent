@@ -15,10 +15,9 @@
 
 ---
 
-## SECTION INDEX
+## TABLE OF CONTENTS
 
-| Section | Iteration | Date |
-|---------|-----------|------|
+<!-- Auto-maintained by Coder -->
 
 ---
 

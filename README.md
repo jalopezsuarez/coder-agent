@@ -193,7 +193,7 @@ Every story gets a dedicated note in `coder-notes/` with this structure:
 │ USER PROMPT          ← Human     │  You write here. Coder processes
 │                      writes      │  it and clears it on state change.
 ├──────────────────────────────────┤
-│ SECTION INDEX        ← Auto      │  Quick navigation table.
+│ TABLE OF CONTENTS    ← Auto      │  Clickable navigation index.
 ├──────────────────────────────────┤
 │ INSTRUCTIONS #1..N   ← Processed │  Processed from USER PROMPT.
 ├──────────────────────────────────┤
@@ -210,7 +210,7 @@ Every story gets a dedicated note in `coder-notes/` with this structure:
 1. Human writes in USER PROMPT (manually or via `Coder for S005 ...`).
 2. On next state change, Coder processes it into `INSTRUCTIONS #(N+1)`.
 3. USER PROMPT is cleared.
-4. Section index is updated.
+4. Table of contents is updated.
 
 ### Key Design Decisions
 

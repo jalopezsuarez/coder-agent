@@ -82,7 +82,7 @@ All commands must be prefixed with **"Coder"** to activate the agent.
 1. Read `coder-board/coder-board.md` to find last `S###` number.
 2. Increment to next correlative ID (S001, S002, S003...).
 3. Generate a clean, logical title — NO symbols, NO tech stack dumps. Good: `S001 Implement user authentication`. Bad: `S001 JS+JWT+Fastify auth`.
-4. Create note `coder-notes/S### <title>.md` with standard structure (USER PROMPT empty, INSTRUCTIONS empty, section index empty).
+4. Create note `coder-notes/S### <title>.md` with standard structure (USER PROMPT empty, INSTRUCTIONS empty, table of contents empty).
 5. Add to **BACKLOG** in Board: `- [ ] [[S### <title>]]`
 6. If "urgent": also add `#urgent`.
 7. Confirm: `Human, I've created S### <title> in BACKLOG.`
@@ -96,7 +96,7 @@ All commands must be prefixed with **"Coder"** to activate the agent.
 5. For each story:
    a. Read note. Process USER PROMPT → create/append INSTRUCTIONS iteration. Clear USER PROMPT.
    b. Write `PLANNING #N` section.
-   c. Update section index.
+   c. Update table of contents.
    d. Move to **REVIEW** in Board.
    e. Update `Status` and `Last updated` in note.
 6. Remind: `Human, remember to update memory before execution if needed.`
@@ -112,7 +112,7 @@ All commands must be prefixed with **"Coder"** to activate the agent.
    b. Consolidate all PLANNING iterations into final plan.
    c. Implement code.
    d. Write `EXECUTION #N` section.
-   e. Update section index.
+   e. Update table of contents.
    f. Move to **TESTING** in Board.
 6. Remind: `Human, execution complete. I recommend running 'Coder update memory' to reflect the changes.`
 
@@ -201,11 +201,9 @@ Every note in `coder-notes/` follows this structure:
 
 ---
 
-## SECTION INDEX
+## TABLE OF CONTENTS
 
 <!-- Auto-maintained by Coder -->
-| Section | Iteration | Date |
-|---------|-----------|------|
 
 ---
 
@@ -241,7 +239,7 @@ Every note in `coder-notes/` follows this structure:
    a. Read the content.
    b. Create `INSTRUCTIONS #(N+1) — YYYY-MM-DD HH:MM` with the processed content.
    c. **Clear USER PROMPT** (replace content with the empty placeholder comment).
-   d. Update SECTION INDEX.
+   d. Update TABLE OF CONTENTS.
 2. USER PROMPT must be empty after every state change.
 3. USER PROMPT can be filled:
    - Manually by Human editing the file.
@@ -336,22 +334,26 @@ Missing media query breakpoint at 768px.
 ✅ Fixed
 ```
 
-### SECTION INDEX Format
+### TABLE OF CONTENTS Format
 
-Maintained at the top of each note, auto-updated by Coder:
+Maintained at the top of each note, auto-updated by Coder. Uses indented list with section groups:
 
 ```markdown
-## SECTION INDEX
+## TABLE OF CONTENTS
 
-| Section | Iteration | Date |
-|---------|-----------|------|
-| INSTRUCTIONS | #1 | 2026-04-13 12:34 |
-| INSTRUCTIONS | #2 | 2026-04-13 15:00 |
-| PLANNING | #1 | 2026-04-13 13:00 |
-| PLANNING | #2 | 2026-04-13 16:00 |
-| EXECUTION | #1 | 2026-04-14 09:00 |
-| BUG FIX | #1 | 2026-04-14 11:30 |
+- INSTRUCTIONS
+  - [INSTRUCTIONS #1 — 2026-04-13 12:34](#instructions-1)
+  - [INSTRUCTIONS #2 — 2026-04-13 15:00](#instructions-2)
+- PLANNING
+  - [PLANNING #1 — 2026-04-13 13:00](#planning-1)
+  - [PLANNING #2 — 2026-04-13 16:00](#planning-2)
+- EXECUTION
+  - [EXECUTION #1 — 2026-04-14 09:00](#execution-1)
+- BUG FIX
+  - [BUG FIX #1 — 2026-04-14 11:30](#bug-fix-1)
 ```
+
+Anchor IDs follow the pattern: section name lowercase, spaces replaced with `-`, e.g. `#instructions-1`, `#planning-2`, `#bug-fix-1`.
 
 ---
 
@@ -582,7 +584,7 @@ ON DEMAND:     dependencies.md
 ### Phase 1 — Story Creation (`Coder create task`)
 
 1. Calculate next S### ID.
-2. Create note with USER PROMPT empty, INSTRUCTIONS empty, section index empty.
+2. Create note with USER PROMPT empty, INSTRUCTIONS empty, table of contents empty.
 3. Add `[[S### title]]` to BACKLOG.
 
 ### Phase 2 — Planning (`Coder plan`)
@@ -591,7 +593,7 @@ ON DEMAND:     dependencies.md
 2. For each story in PLAN:
    a. Process USER PROMPT → INSTRUCTIONS #N. Clear prompt.
    b. Write PLANNING #N.
-   c. Update section index.
+   c. Update table of contents.
    d. Move to REVIEW.
 
 ### Phase 3 — Human Review (wait)
@@ -613,7 +615,7 @@ Human reviews, writes in USER PROMPT or gives verbal instructions, moves to PLAN
    b. Consolidate all PLANNING iterations.
    c. Implement code.
    d. Write EXECUTION #N.
-   e. Update section index.
+   e. Update table of contents.
    f. Move to TESTING.
 4. Remind about memory update.
 
@@ -621,7 +623,7 @@ Human reviews, writes in USER PROMPT or gives verbal instructions, moves to PLAN
 
 1. Identify related story or ask Human.
 2. Add BUG FIX #N to the story note.
-3. Update section index.
+3. Update table of contents.
 4. Implement fix.
 5. Move to TESTING if was in DONE/TESTING.
 
