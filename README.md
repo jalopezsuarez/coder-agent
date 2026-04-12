@@ -151,6 +151,8 @@ All commands require the **"Coder"** prefix to activate the agent.
 | `Coder create task urgent <desc>` | Same, with `#urgent` tag |
 | `Coder plan` | Plan all stories in PLAN column |
 | `Coder execute` | Implement all stories in EXECUTION column |
+| `Coder move S001 to PLAN` | Move story between columns |
+| `Coder add to S001 <text>` | Append text to story's USER PROMPT |
 | `Coder status` | Show board summary |
 | `Coder update memory` | Re-index project knowledge base |
 | `Coder for S005 <instruction>` | Add instruction to specific story |
@@ -278,6 +280,7 @@ The agent brain lives in `CODER.md`. Bridge files (`AGENTS.md`, `GEMINI.md`) tel
 ├── GEMINI.md                                   # Bridge: Gemini CLI
 ├── .claude/settings.json                       # Permissions: Claude Code
 ├── coder-factory/
+│   ├── index.html                              # Kanban board viewer (open in browser)
 │   ├── coder-memory/
 │   │   ├── memory.md                           # Main index (always loaded)
 │   │   ├── architecture.md                     # Architecture & patterns
@@ -314,6 +317,24 @@ The board includes Kanban settings that auto-create new notes in the `coder-note
 {"kanban-plugin":"board","new-note-folder":"coder-notes"}
 %%
 ```
+
+---
+
+## 🖥️ Board Viewer (standalone)
+
+A self-contained HTML viewer is included at `coder-factory/index.html`. No server required — just open it in any browser.
+
+1. Open `coder-factory/index.html` in your browser
+2. Click **Open coder-factory** and select the `coder-factory/` folder
+3. The board loads with all columns and story cards
+
+**Features:**
+- Trello-style Kanban board with all 6 columns
+- Cards show title (2-line preview), date, tags, and iteration badges (S001 P#2 E#3)
+- Click any card to open a read-only sidebar with the full story note rendered as Markdown
+- Drag & drop cards between columns
+- Built-in help panel with all Coder commands and examples
+- Works offline — TailwindCSS loaded via CDN
 
 ---
 
