@@ -7,7 +7,7 @@
 <h1 align="center">🤖 Coder Agent</h1>
 
 <p align="center">
-  <strong>A production-grade AI coding agent that lives in your Obsidian vault.</strong><br/>
+  <strong>A production-grade AI coding agent that builds an optimized context memory — graphs, architecture, connections & tech — and accompanies you through the full project lifecycle.</strong><br/>
   Kanban-driven workflow · AI-optimized memory system · Works with any LLM CLI.
 </p>
 
@@ -27,9 +27,11 @@
 
 ## What is Coder?
 
-Coder is an **agent instruction set** (not a binary, not a service) that turns any LLM-powered CLI into a disciplined software developer. It operates entirely through Markdown files inside an Obsidian vault, following a strict Kanban workflow with human-in-the-loop review cycles.
+Coder is an **agent instruction set** that turns any LLM CLI into a disciplined software developer. It operates through Markdown files — compatible with the Obsidian Kanban plugin, but fully usable standalone — following a strict Kanban workflow with human-in-the-loop review cycles.
 
-**The key idea:** you manage a Kanban board in Obsidian. Coder reads the board, plans tasks, writes code, and documents everything — all through versioned, incremental Markdown notes. You stay in control at every step.
+**The key idea:** Coder doesn't just write code. It builds and maintains an AI-optimized context memory across your entire project: knowledge graphs, architectural decisions, technology stack, feature connections, and system relationships — all compacted into versioned Markdown notes designed for maximum LLM comprehension.
+
+You manage a Kanban board. Coder reads the board, plans tasks, writes code, tracks bugs, and keeps the knowledge graph up to date — all through versioned, incremental Markdown notes. You stay in control at every step.
 
 ### Why Coder?
 
@@ -46,8 +48,8 @@ Coder is an **agent instruction set** (not a binary, not a service) that turns a
 ### 1. Clone into your project
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/coder-agent.git
-cp -r coder-agent/{AG-CODER.md,AGENTS.md,GEMINI.md,.claude,Coder\ Factory,templates} /path/to/your/project/
+git clone https://github.com/jalopezsuarez/coder-agent.git
+cp -r coder-agent/{CODER.md,AGENTS.md,GEMINI.md,.claude,Coder\ Factory,templates} /path/to/your/project/
 ```
 
 Or simply copy the files manually into your project root.
@@ -183,9 +185,9 @@ Coder maintains an **AI-optimized knowledge base** designed for maximum informat
 ### Architecture
 
 ```
-Coder Factory/
-└── Coder Memory/
-    ├── Coder Memory.md      ← Always loaded (~50-100 lines)
+coder-factory/
+└── coder-memory/
+    ├── memory.md      ← Always loaded (~50-100 lines)
     ├── architecture.md      ← Loaded during planning
     ├── modules.md           ← Loaded during planning + execution
     ├── conventions.md       ← Loaded during execution
@@ -199,7 +201,7 @@ Not all memory is loaded every time. The agent selects what it needs:
 
 | Context | What's Loaded |
 |---------|--------------|
-| **Always** | `Coder Memory.md` — tech stack, structure, state, module registry |
+| **Always** | `memory.md` — tech stack, structure, state, module registry |
 | **Planning** | + `architecture.md` + relevant sections of `modules.md` |
 | **Execution** | + `conventions.md` + `modules.md` + `knowledge-graph.md` |
 | **On demand** | `dependencies.md` when adding/changing packages |
@@ -230,12 +232,12 @@ When memory is built or updated, it runs 7 phases:
 
 | CLI | Instruction File | How It Works |
 |-----|-------------------|-------------|
-| **Claude Code** | `AGENTS.md` → `AG-CODER.md` | Claude Code auto-reads `AGENTS.md` which points to the full agent |
-| **Gemini CLI** | `GEMINI.md` → `AG-CODER.md` | Gemini auto-reads `GEMINI.md` which points to the full agent |
-| **Codex CLI** | `AGENTS.md` → `AG-CODER.md` | Codex auto-reads `AGENTS.md` which points to the full agent |
-| **Other** | Load `AG-CODER.md` manually | Any agent that can read a system prompt file will work |
+| **Claude Code** | `AGENTS.md` → `CODER.md` | Claude Code auto-reads `AGENTS.md` which points to the full agent |
+| **Gemini CLI** | `GEMINI.md` → `CODER.md` | Gemini auto-reads `GEMINI.md` which points to the full agent |
+| **Codex CLI** | `AGENTS.md` → `CODER.md` | Codex auto-reads `AGENTS.md` which points to the full agent |
+| **Other** | Load `CODER.md` manually | Any agent that can read a system prompt file will work |
 
-The agent brain lives in `AG-CODER.md`. The other files (`AGENTS.md`, `GEMINI.md`) are thin bridges that tell each CLI to read it.
+The agent brain lives in `CODER.md`. The other files (`AGENTS.md`, `GEMINI.md`) are thin bridges that tell each CLI to read it.
 
 ---
 
@@ -243,22 +245,22 @@ The agent brain lives in `AG-CODER.md`. The other files (`AGENTS.md`, `GEMINI.md
 
 ```
 .
-├── AG-CODER.md                              # Agent instructions (source of truth)
+├── CODER.md                              # Agent instructions (source of truth)
 ├── AGENTS.md                                # Bridge for Claude Code / Codex CLI
 ├── GEMINI.md                                # Bridge for Gemini CLI
 ├── .claude/
 │   └── settings.json                        # Permissions for Claude Code
-├── Coder Factory/
-│   ├── Coder Memory/
-│   │   ├── Coder Memory.md                  # Main memory index
+├── coder-factory/
+│   ├── coder-memory/
+│   │   ├── memory.md                        # Main memory index
 │   │   ├── architecture.md                  # Architecture & patterns
 │   │   ├── modules.md                       # Module map
 │   │   ├── conventions.md                   # Code style rules
 │   │   ├── dependencies.md                  # Packages & scripts
 │   │   └── knowledge-graph.md               # Symbol graph & call chains
-│   ├── Coder Board/
-│   │   └── Coder Board.md                   # Kanban board (Obsidian plugin compatible)
-│   └── Coder Notes/                         # Task notes (auto-created)
+│   ├── coder-board/
+│   │   └── coder-board.md                   # Kanban board (Obsidian plugin compatible)
+│   └── coder-notes/                         # Task notes (auto-created)
 ├── templates/
 │   └── TAREA-TEMPLATE.md                    # Task note template
 └── README.md                                # This file
@@ -268,13 +270,13 @@ The agent brain lives in `AG-CODER.md`. The other files (`AGENTS.md`, `GEMINI.md
 
 ## 🎯 Obsidian Integration
 
-The Kanban board (`Coder Board.md`) is compatible with the [Obsidian Kanban plugin](https://github.com/mgmeyers/obsidian-kanban):
+The Kanban board (`coder-board.md`) is compatible (optional) with the [Obsidian Kanban plugin](https://github.com/mgmeyers/obsidian-kanban):
 
 1. Open Obsidian → Settings → Community Plugins → Browse
 2. Search **Kanban** → Install → Enable
-3. Open `Coder Board.md` — it renders as a visual board
+3. Open `coder-board.md` — it renders as a visual board
 
-Task notes in `Coder Notes/` are regular Obsidian notes with full linking, search, and graph view support.
+Task notes in `coder-notes/` are regular Obsidian notes with full linking, search, and graph view support.
 
 ---
 
@@ -293,7 +295,7 @@ Current version: **v0.202604112034**
 
 1. Fork the repo.
 2. Create a branch: `git checkout -b feature/your-feature`
-3. Edit `AG-CODER.md` (single source of truth for agent behavior).
+3. Edit `CODER.md` (single source of truth for agent behavior).
 4. Update version timestamp.
 5. Submit a PR with a clear description of changes.
 
@@ -306,5 +308,5 @@ MIT — use it, fork it, build on it.
 ---
 
 <p align="center">
-  <sub>Built with obsessive attention to token efficiency.</sub>
+  <sub>Jose Antonio Lopez - Built with obsessive attention to token efficiency.</sub>
 </p>
