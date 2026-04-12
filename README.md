@@ -88,7 +88,7 @@ Coder auto-creates the full `coder-factory/` structure and indexes your project 
 ## 🔄 How It Works
 
 ```
- The human                    Coder                         Project
+ Human                        Coder                         Project
   │                              │                              │
   │  "Coder create task X"       │                              │
   │─────────────────────────────>│                              │
@@ -132,12 +132,12 @@ Coder auto-creates the full `coder-factory/` structure and indexes your project 
 
 | Column | Owner | Description |
 |--------|-------|-------------|
-| **BACKLOG** | Coder/The human | Stories created, waiting to be prioritized |
+| **BACKLOG** | Coder/Human | Stories created, waiting to be prioritized |
 | **PLAN** | Coder | Coder generates detailed plans |
-| **REVIEW** | The human | The human reviews the plan, adds feedback |
+| **REVIEW** | Human | Human reviews the plan, adds feedback |
 | **EXECUTION** | Coder | Coder writes the actual code |
-| **TESTING** | The human | The human validates the implementation |
-| **DONE** | The human | Story completed |
+| **TESTING** | Human | Human validates the implementation |
+| **DONE** | Human | Story completed |
 
 ---
 
@@ -190,7 +190,7 @@ Every story gets a dedicated note in `coder-notes/` with this structure:
 │ # S001 Implement user auth       │
 │ > Status | Created | Updated     │
 ├──────────────────────────────────┤
-│ USER PROMPT    ← The human  │  You write here. Coder processes
+│ USER PROMPT          ← Human     │  You write here. Coder processes
 │                      writes      │  it and clears it on state change.
 ├──────────────────────────────────┤
 │ TABLE OF CONTENTS    ← Auto      │  Clickable navigation index.
@@ -207,7 +207,7 @@ Every story gets a dedicated note in `coder-notes/` with this structure:
 
 ### USER PROMPT Flow
 
-1. The human writes in USER PROMPT (manually or via `Coder for S005 ...`).
+1. Human writes in USER PROMPT (manually or via `Coder for S005 ...`).
 2. On next state change, Coder processes it into `INSTRUCTIONS #(N+1)`.
 3. USER PROMPT is cleared.
 4. Table of contents is updated.
