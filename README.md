@@ -287,25 +287,40 @@ The agent brain lives in `CODER.md`. Bridge files (`AGENTS.md`, `GEMINI.md`) tel
 
 ```
 .
-├── CODER.md                                    # Agent brain (source of truth)
-├── AGENTS.md                                   # Bridge: Claude Code / Codex CLI
-├── GEMINI.md                                   # Bridge: Gemini CLI
-├── .claude/settings.json                       # Permissions: Claude Code
-├── coder-factory/
-│   ├── index.html                              # Kanban board viewer (open in browser)
-│   ├── coder-memory/
-│   │   ├── memory.md                           # Main index (always loaded)
-│   │   ├── architecture.md                     # Architecture & patterns
-│   │   ├── modules.md                          # Module map
-│   │   ├── conventions.md                      # Code style
-│   │   ├── dependencies.md                     # Packages & scripts
-│   │   └── knowledge-graph.md                  # Symbol graph & call chains
-│   ├── coder-board/
-│   │   └── coder-board.md                      # Kanban board
-│   └── coder-notes/                            # Story notes (auto-created)
-├── templates/
-│   └── story-template.md                       # Story note template
-└── README.md
+├── README.md                                   # Project overview (this file)
+├── CLAUDE.md                                   # Instructions for Claude Code
+├── coder-agent.png                             # Project banner
+├── .claude/                                    # Claude Code settings
+└── src/                                        # Source files (copy to your project)
+    ├── CODER.md                                # Agent brain (source of truth)
+    ├── AGENTS.md                               # Bridge: Claude Code / Codex CLI
+    ├── GEMINI.md                               # Bridge: Gemini CLI
+    ├── kanban.py                               # Kanban board manager (python3 kanban.py)
+    ├── story-template.md                       # Story note template
+    ├── coder-board.md                          # Kanban board template
+    ├── memory.md                               # Main memory index template
+    ├── architecture.md                         # Architecture & patterns template
+    ├── modules.md                              # Module map template
+    ├── conventions.md                          # Code conventions template
+    ├── dependencies.md                         # Dependencies template
+    └── knowledge-graph.md                      # Knowledge graph template
+```
+
+At runtime, Coder auto-generates the `coder-factory/` structure in your project:
+
+```
+<CODER_FACTORY_ROOT>/coder-factory/
+├── kanban.py                                   # Kanban board manager (copied from src/)
+├── coder-memory/                               # AI-optimized knowledge base
+│   ├── memory.md                               # Main index (always loaded)
+│   ├── architecture.md                         # Architecture & patterns
+│   ├── modules.md                              # Module map
+│   ├── conventions.md                          # Code style
+│   ├── dependencies.md                         # Packages & scripts
+│   └── knowledge-graph.md                      # Symbol graph & call chains
+├── coder-board/
+│   └── coder-board.md                          # Kanban board
+└── coder-notes/                                # Story notes (auto-created)
 ```
 
 ---
@@ -332,13 +347,16 @@ The board includes Kanban settings that auto-create new notes in the `coder-note
 
 ---
 
-## 🖥️ Board Viewer (standalone)
+## 🖥️ Kanban Board Manager
 
-A self-contained HTML viewer is included at `coder-factory/index.html`. No server required — just open it in any browser.
+A Kanban board manager included at `coder-factory/kanban.py`. No external dependencies — just Python 3.
 
-1. Open `coder-factory/index.html` in your browser
-2. Click **Open coder-factory** and select the `coder-factory/` folder
-3. The board loads with all columns and story cards
+```bash
+cd coder-factory
+python3 kanban.py
+```
+
+The server starts at `http://localhost:8089` and opens the board automatically.
 
 **Features:**
 - Trello-style Kanban board with all 6 columns
@@ -346,7 +364,7 @@ A self-contained HTML viewer is included at `coder-factory/index.html`. No serve
 - Click any card to open a read-only sidebar with the full story note rendered as Markdown
 - Drag & drop cards between columns
 - Built-in help panel with all Coder commands and examples
-- Works offline — TailwindCSS loaded via CDN
+- Zero dependencies — pure Python 3
 
 ---
 
