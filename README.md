@@ -79,14 +79,14 @@ Coder auto-creates the full `coder-factory/` structure and indexes your project 
 
 ### Recommendations
 
-**Use the `coder-agent` folder as the `coder-factory` path** — When Coder asks for the factory path, point it to the same `coder-agent` directory. This keeps all Coder artifacts (`coder-factory/`, notes, board, memory) contained inside the gitignored folder, keeping your project tree clean.
+- **Use the `coder-agent` folder as the `coder-factory` path** — When Coder asks for the factory path, point it to the same `coder-agent` directory. This keeps all Coder artifacts (`coder-factory/`, notes, board, memory) contained inside the gitignored folder, keeping your project tree clean.
 
   ```
   Human, where should I create or find coder-factory?
   > ./coder-agent
   ```
 
-**Add `coder-agent` to your `.gitignore`** — The cloned repository and all generated artifacts should not be committed to your project.
+- **Add `coder-agent` to your `.gitignore`** — The cloned repository and all generated artifacts should not be committed to your project.
 
   ```bash
   echo "coder-agent" >> /path/to/your/project/.gitignore
