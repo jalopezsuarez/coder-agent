@@ -295,7 +295,7 @@ The agent brain lives in `CODER.md`. Bridge files (`AGENTS.md`, `GEMINI.md`) tel
 
 ---
 
-## 🎯 Obsidian Integration
+## 🎯 Obsidian Integration (optional)
 
 ### Kanban Plugin
 
