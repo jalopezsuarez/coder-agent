@@ -72,6 +72,9 @@ Human, where should I create or find coder-factory?
 Give me the full path (it can be different from the current project).                                                                                       
 I cannot start working without this path.   
 ```
+```
+./coder-agent
+```
 
 ### 4. Start working
 
