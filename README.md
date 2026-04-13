@@ -28,7 +28,7 @@
 
 ## What is Coder?
 
-Coder is an **agent instruction set** that turns any LLM CLI into a disciplined software developer. It operates through Markdown files — compatible with the Obsidian Kanban plugin, but fully usable standalone — following a strict Kanban workflow with human-in-the-loop review cycles.
+Coder is an **agent instruction set** that turns any LLM CLI into a disciplined software developer. It operates through Markdown files following a strict Kanban workflow with human-in-the-loop review cycles.
 
 **The key idea:** Coder doesn't just write code. It builds and maintains an AI-optimized context memory across your entire project: knowledge graphs, architectural decisions, technology stack, feature connections, and system relationships — all compacted into versioned Markdown notes designed for maximum LLM comprehension.
 
