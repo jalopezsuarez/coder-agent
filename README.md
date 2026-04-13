@@ -209,7 +209,7 @@ The service starts at `http://localhost:8089`.
 
 ## ⚡ Commands
 
-All commands **require** the word **"Coder"** (or **"coder"**) in your message to activate the agent — without it, Coder will not act, no exceptions. Coder can only work on tasks tagged `#coder` — tasks without it are human-owned. Tasks tagged `#canceled` are always skipped.
+All commands **require** the word **"Coder"** (or **"coder"**) in your message to activate the agent. Without it, the agent is bypassed and the LLM executes your request directly as a normal assistant. Coder can only work on tasks tagged `#coder` — tasks without it are human-owned. Tasks tagged `#canceled` are always skipped.
 
 | Command | Description |
 |---------|-------------|
