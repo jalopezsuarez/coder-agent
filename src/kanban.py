@@ -489,6 +489,8 @@ function shortDate(s){
 
 function render(){
   var el=document.getElementById('board'),total=0;
+  var scrolls={};
+  el.querySelectorAll('.col-cards').forEach(function(cc){scrolls[cc.dataset.ci]=cc.scrollTop;});
   el.innerHTML='';
   board.forEach(function(col,ci){
     total+=col.tasks.length;
@@ -522,6 +524,7 @@ function render(){
   });
   document.getElementById('count').textContent=total+' task'+(total===1?'':'s');
   document.getElementById('empty').style.display=total?'none':'flex';
+  el.querySelectorAll('.col-cards').forEach(function(cc){if(scrolls[cc.dataset.ci])cc.scrollTop=scrolls[cc.dataset.ci];});
   if(typeof applyFilter==='function')applyFilter();
 }
 
