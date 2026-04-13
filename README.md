@@ -162,11 +162,11 @@ All commands require the **"Coder"** prefix to activate the agent. Coder can onl
 | `Coder create task <desc>` | Create a task in BACKLOG with note |
 | `Coder plan` | Plan eligible tasks in PLAN column |
 | `Coder execute` | Implement eligible tasks in EXECUTION column |
-| `Coder move T001 to PLAN` | Move task between columns |
-| `Coder add to T001 <text>` | Append text to task's USER PROMPT |
+| `Coder move C1 to PLAN` | Move task between columns |
+| `Coder add to C1 <text>` | Append text to task's USER PROMPT |
 | `Coder status` | Show board summary |
 | `Coder update memory` | Re-index project knowledge base |
-| `Coder for T005 <instruction>` | Add instruction to specific task |
+| `Coder for C5 <instruction>` | Add instruction to specific task |
 | `Coder <bug description>` | Smart detection: bug or new task? |
 
 ### Tags
@@ -183,7 +183,7 @@ When you report an issue, Coder tries to match it to an existing task (only thos
 ```
 > Coder the sidebar doesn't collapse on mobile
 
-Human, this looks like a bug on T025 "Implement sidebar navigation".
+Human, this looks like a bug on C25 "Implement sidebar navigation".
 Should I add a BUG FIX entry there?
 ```
 
@@ -197,7 +197,7 @@ Every task gets a dedicated note in `coder-notes/` with this structure:
 
 ```
 ┌──────────────────────────────────┐
-│ # T001 Implement user auth       │
+│ # C1 Implement user auth       │
 │ > Status | Created | Updated     │
 ├──────────────────────────────────┤
 │ USER PROMPT          ← Human     │  You write here. Coder processes
@@ -217,16 +217,16 @@ Every task gets a dedicated note in `coder-notes/` with this structure:
 
 ### USER PROMPT Flow
 
-1. Human writes in USER PROMPT (manually or via `Coder for T005 ...`).
+1. Human writes in USER PROMPT (manually or via `Coder for C5 ...`).
 2. On next state change, Coder processes it into `INSTRUCTIONS #(N+1)`.
 3. USER PROMPT is cleared.
 4. Table of contents is updated.
 
 ### Key Design Decisions
 
-- **Filenames match titles** — `T001 Implement user authentication.md` links directly from the Kanban board via `[[T001 Implement user authentication]]`.
+- **Filenames match titles** — `C1 Implement user authentication.md` links directly from the Kanban board via `[[C1 Implement user authentication]]`.
 - **Titles are clean** — No symbols, no tech dumps. Just a clear summary: "Implement user authentication", not "JS+JWT+Fastify auth module".
-- **Tasks use T### IDs** — correlative numbering (T001, T002, T003...) for clear tracking.
+- **Tasks use C<N> IDs** — simple incremental numbering (C1, C2, C3...) for clear tracking.
 - **All sections are append-only** — PLANNING #1 is never modified; #2 is appended with the delta.
 
 ---
@@ -358,7 +358,7 @@ The server starts at `http://localhost:8089`.
 **Built-in Markdown Renderer:**
 - Headers, bold, italic, strikethrough, inline code, code blocks, blockquotes
 - Ordered, unordered, and nested lists with task list support (checkboxes)
-- Tables, internal anchor links, external links, and Obsidian wiki-links (`[[T001 Title]]`)
+- Tables, internal anchor links, external links, and Obsidian wiki-links (`[[C1 Title]]`)
 
 **Extras:**
 - Help modal with all Coder commands, workflow visualization, and tag reference
@@ -378,7 +378,7 @@ The board uses the [Obsidian Kanban plugin](https://github.com/mgmeyers/obsidian
 
 1. Settings → Community Plugins → Browse → **Kanban** → Install → Enable
 2. Open `coder-board.md` — renders as a visual board
-3. Tasks auto-link: `[[T001 Implement user authentication]]` opens the note directly
+3. Tasks auto-link: `[[C1 Implement user authentication]]` opens the note directly
 
 ### Settings
 
