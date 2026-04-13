@@ -1,12 +1,40 @@
 #!/usr/bin/env python3
 """Kanban board — zero dependencies, pure Python 3"""
-import http.server, json, os, re, urllib.parse
+import http.server, json, os, re, threading, time, urllib.parse
 from datetime import datetime
 
 PORT = 8089
 BASE = os.path.dirname(os.path.abspath(__file__))
 BOARD = os.path.join(BASE, "coder-board", "coder-board.md")
 NOTES = os.path.join(BASE, "coder-notes")
+
+_change = threading.Event()
+_last_mtime = {"board": 0.0, "notes": 0.0}
+
+
+def _snapshot():
+    b = os.path.getmtime(BOARD) if os.path.exists(BOARD) else 0.0
+    n = 0.0
+    if os.path.isdir(NOTES):
+        for f in os.listdir(NOTES):
+            if f.endswith(".md"):
+                try:
+                    t = os.path.getmtime(os.path.join(NOTES, f))
+                    if t > n:
+                        n = t
+                except OSError:
+                    pass
+    return b, n
+
+
+def _watcher():
+    _last_mtime["board"], _last_mtime["notes"] = _snapshot()
+    while True:
+        time.sleep(1)
+        b, n = _snapshot()
+        if b != _last_mtime["board"] or n != _last_mtime["notes"]:
+            _last_mtime["board"], _last_mtime["notes"] = b, n
+            _change.set()
 
 
 def extract_preview(txt):
@@ -168,11 +196,21 @@ body{font-family:var(--font);font-size:14px;color:var(--text);background:var(--b
 .app{display:flex;flex-direction:column;height:100vh}
 .header{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-bottom:1px solid var(--border);background:var(--surface);flex-shrink:0}
 .header-left{display:flex;align-items:center;gap:10px}
-.header-title{font-size:14px;font-weight:600}
+.header-title{font-size:14px;font-weight:600;color:#7afa4f}
 .header-count{font-size:12px;color:var(--text2);background:var(--btn);padding:1px 8px;border-radius:10px;border:1px solid var(--border)}
+.header-right{display:flex;align-items:center;gap:8px}
+.search-box{position:relative;display:flex;align-items:center}
+.search-box svg{position:absolute;left:8px;width:14px;height:14px;color:var(--text3);pointer-events:none}
+.search-input{width:180px;height:32px;padding:0 8px 0 28px;border:1px solid var(--border);border-radius:var(--radius);background:var(--bg);color:var(--text);font-size:13px;font-family:var(--font);outline:none;transition:border-color .15s,width .2s}
+.search-input::placeholder{color:var(--text3)}
+.search-input:focus{border-color:var(--accent);width:240px}
+.search-clear{position:absolute;right:6px;display:none;align-items:center;justify-content:center;width:18px;height:18px;border:none;border-radius:3px;background:var(--btn);color:var(--text3);cursor:pointer;padding:0;line-height:1}
+.search-clear:hover{background:var(--btn-hover);color:var(--text)}
+.search-box.has-value .search-clear{display:flex}
 .btn-icon{display:flex;align-items:center;justify-content:center;width:32px;height:32px;border:1px solid var(--border);border-radius:var(--radius);background:var(--btn);color:var(--text2);cursor:pointer}
 .btn-icon:hover{background:var(--btn-hover);color:var(--text);border-color:var(--text2)}
 .btn-icon svg{width:16px;height:16px}
+.card.search-hidden{display:none}
 
 .board{display:flex;flex:1;overflow-x:auto;gap:12px;padding:16px;min-height:0;position:relative}
 .column{display:flex;flex-direction:column;min-width:240px;max-width:300px;width:100%;flex-shrink:0}
@@ -195,7 +233,7 @@ body{font-family:var(--font);font-size:14px;color:var(--text);background:var(--b
 .card-footer{display:flex;align-items:center;justify-content:space-between;margin-top:8px;gap:4px;flex-wrap:wrap}
 .card-date{font-size:11px;color:var(--text3)}
 .card-meta{display:flex;align-items:center;gap:4px;flex-wrap:wrap;justify-content:flex-end}
-.card-id{font-size:11px;font-family:var(--mono);color:var(--text2);background:var(--btn);padding:1px 6px;border-radius:var(--radius-sm)}
+.card-id{font-size:12px;font-family:var(--mono);color:#fff;background:#1f6feb;padding:2px 6px;border-radius:var(--radius-sm);margin-right:5px;vertical-align:baseline}
 .tag{font-size:11px;padding:1px 6px;border-radius:var(--radius-sm);font-weight:500}
 .tag-coder{background:rgba(56,139,253,0.15);color:var(--accent)}
 .tag-urgent{background:rgba(248,81,73,0.15);color:var(--red)}
@@ -222,7 +260,6 @@ body{font-family:var(--font);font-size:14px;color:var(--text);background:var(--b
 .help-section h3{font-size:11px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px}
 .help-row{display:flex;gap:12px;padding:4px 0;font-size:13px}
 .help-row code{font-family:var(--mono);font-size:12px;color:var(--accent);background:var(--btn);padding:2px 6px;border-radius:var(--radius-sm);white-space:nowrap}
-.help-row span{color:var(--text2);flex:1}
 .help-flow{display:flex;align-items:center;gap:6px;flex-wrap:wrap;font-size:12px;margin-bottom:8px}
 .help-pill{padding:2px 8px;border-radius:var(--radius-sm);font-weight:500}
 .help-arrow{color:var(--text3)}
@@ -238,7 +275,11 @@ body{font-family:var(--font);font-size:14px;color:var(--text);background:var(--b
 .side-status{font-size:12px;font-weight:500;padding:2px 8px;border-radius:var(--radius-sm)}
 .side-title{font-size:14px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex:1}
 .side-close{margin-left:auto;flex-shrink:0}
-.side-meta{display:flex;align-items:center;gap:12px;padding:8px 16px;border-bottom:1px solid var(--border-subtle);font-size:12px;color:var(--text3);flex-shrink:0}
+.side-meta{display:flex;align-items:center;gap:8px;padding:8px 16px;border-bottom:1px solid var(--border-subtle);font-size:12px;color:var(--text3);flex-shrink:0}
+.side-tags{display:flex;align-items:center;gap:4px}
+.tag-toggle{font-size:11px;padding:1px 6px;border-radius:var(--radius-sm);font-weight:500;cursor:pointer;transition:background .15s,color .15s;text-decoration:none;user-select:none}
+.tag-toggle.off{background:var(--btn-hover);color:var(--text2)}
+.side-dates{display:flex;align-items:center;gap:12px}
 .side-actions{display:flex;margin-left:auto;flex-shrink:0}
 .side-btn{display:flex;align-items:center;justify-content:center;width:30px;height:26px;border:1px solid var(--border);background:var(--btn);color:var(--text3);cursor:pointer;padding:0}
 .side-btn:hover{background:var(--btn-hover);color:var(--text)}
@@ -266,7 +307,7 @@ body{font-family:var(--font);font-size:14px;color:var(--text);background:var(--b
 .md{font-family:var(--font);font-size:14px;line-height:1.5;word-wrap:break-word;color:var(--text)}
 .md h1{font-size:2em;font-weight:600;padding-bottom:.3em;border-bottom:1px solid var(--border);margin:24px 0 16px}
 .md h2{font-size:1.5em;font-weight:600;padding-bottom:.3em;border-bottom:1px solid var(--border);margin:24px 0 16px;color:#91c4ec}
-.md h3{font-size:1.25em;font-weight:600;margin:24px 0 16px;color:#72c6b1}
+.md h3{font-size:1.25em;font-weight:600;margin:24px 0 16px;color:#d898d8}
 .md h4{font-size:1em;font-weight:600;margin:24px 0 16px;color:#e59746}
 .md h5{font-size:.875em;font-weight:600;margin:24px 0 16px}
 .md h6{font-size:.85em;font-weight:600;color:var(--text3);margin:24px 0 16px}
@@ -279,7 +320,7 @@ body{font-family:var(--font);font-size:14px;color:var(--text);background:var(--b
 .md code{font-family:var(--mono);font-size:85%;padding:.2em .4em;background:#282a31;color:#15f844;border-radius:var(--radius-sm)}
 .md pre{font-family:var(--mono);font-size:85%;padding:16px;overflow:auto;line-height:1.45;background:var(--bg);border-radius:var(--radius);margin:0 0 16px;border:1px solid var(--border)}
 .md pre code{font-size:100%;padding:0;background:transparent;border:0}
-.md hr{height:.25em;padding:0;margin:24px 0;background:var(--border);border:0;border-radius:2px}
+.md hr{height:0;padding:0;margin:16px 0;background:var(--border);border:0;border-radius:2px}
 .md table{display:block;width:max-content;max-width:100%;overflow:auto;margin:0 0 16px;border-spacing:0;border-radius:var(--radius);border:1px solid var(--border)}
 .md table th,.md table td{padding:6px 13px;border-top:1px solid var(--border);border-left:1px solid var(--border)}
 .md table th{font-weight:600}
@@ -287,7 +328,7 @@ body{font-family:var(--font);font-size:14px;color:var(--text);background:var(--b
 .md table th:first-child,.md table td:first-child{border-left:0}
 .md table tr{background:var(--surface)}
 .md table tr:nth-child(2n){background:var(--bg)}
-.md a{color:#4493f8;text-decoration:none}
+.md a{color:#4493f8;text-decoration:none;cursor:pointer}
 .md a:hover{text-decoration:underline}
 .md strong{font-weight:600}
 .md del{color:var(--text2)}
@@ -305,9 +346,16 @@ body{font-family:var(--font);font-size:14px;color:var(--text);background:var(--b
       <span class="header-title">Coder Agent</span>
       <span class="header-count" id="count">0 stories</span>
     </div>
-    <button class="btn-icon" id="helpBtn" title="Help">
-      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="8" r="6.25"/><line x1="8" y1="7" x2="8" y2="11"/><circle cx="8" cy="4.75" r=".5" fill="currentColor" stroke="none"/></svg>
-    </button>
+    <div class="header-right">
+      <div class="search-box" id="searchBox">
+        <svg viewBox="0 0 16 16" fill="currentColor"><path d="M10.68 11.74a6 6 0 0 1-7.922-8.982 6 6 0 0 1 8.982 7.922l3.04 3.04a.749.749 0 0 1-.326 1.275.749.749 0 0 1-.734-.215ZM11.5 7a4.499 4.499 0 1 0-8.997 0A4.499 4.499 0 0 0 11.5 7Z"/></svg>
+        <input class="search-input" id="searchInput" type="text" placeholder="Filter stories…" autocomplete="off" spellcheck="false">
+        <button class="search-clear" id="searchClear" title="Clear">&times;</button>
+      </div>
+      <button class="btn-icon" id="helpBtn" title="Help">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="8" r="6.25"/><line x1="8" y1="7" x2="8" y2="11"/><circle cx="8" cy="4.75" r=".5" fill="currentColor" stroke="none"/></svg>
+      </button>
+    </div>
   </header>
   <main class="board" id="board"></main>
 </div>
@@ -385,8 +433,15 @@ body{font-family:var(--font);font-size:14px;color:var(--text);background:var(--b
     </button>
   </div>
   <div class="side-meta">
-    <span id="sCreated"></span>
-    <span id="sUpdated"></span>
+    <div class="side-tags">
+      <a class="tag-toggle off" id="tagCoder" data-tag="coder">#coder</a>
+      <a class="tag-toggle off" id="tagUrgent" data-tag="urgent">#urgent</a>
+      <a class="tag-toggle off" id="tagBlocked" data-tag="blocked">#blocked</a>
+    </div>
+    <div class="side-dates">
+      <span id="sCreated"></span>
+      <span id="sUpdated"></span>
+    </div>
     <div class="side-actions">
       <button class="side-btn on" id="btn-edit" title="Edit"><svg viewBox="0 0 16 16" fill="currentColor"><path d="M11.013 1.427a1.75 1.75 0 0 1 2.474 0l1.086 1.086a1.75 1.75 0 0 1 0 2.474l-8.61 8.61c-.21.21-.47.364-.756.445l-3.251.93a.75.75 0 0 1-.927-.928l.929-3.25c.081-.286.235-.547.445-.758l8.61-8.61Zm.176 4.823L9.75 4.81l-6.286 6.287a.253.253 0 0 0-.064.108l-.558 1.953 1.953-.558a.253.253 0 0 0 .108-.064Zm1.238-3.763a.25.25 0 0 0-.354 0L10.811 3.75l1.439 1.44 1.263-1.263a.25.25 0 0 0 0-.354Z"/></svg></button>
       <button class="side-btn" id="btn-source" title="Source"><svg viewBox="0 0 16 16" fill="currentColor"><path d="m11.28 3.22 4.25 4.25a.75.75 0 0 1 0 1.06l-4.25 4.25a.749.749 0 0 1-1.275-.326.749.749 0 0 1 .215-.734L13.94 8l-3.72-3.72a.749.749 0 0 1 .326-1.275.749.749 0 0 1 .734.215Zm-6.56 0a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042L2.06 8l3.72 3.72a.749.749 0 0 1-.326 1.275.749.749 0 0 1-.734-.215L.47 8.53a.75.75 0 0 1 0-1.06Z"/></svg></button>
@@ -407,11 +462,22 @@ var SSTYLE={
   TESTING:'background:rgba(240,136,62,0.15);color:var(--orange)',
   DONE:'background:rgba(63,185,80,0.15);color:var(--green)'
 };
-var board=[],active=null,note='',mode='edit';
+var TSTYLE={
+  coder:'background:rgba(56,139,253,0.15);color:var(--accent)',
+  urgent:'background:rgba(248,81,73,0.15);color:var(--red)',
+  blocked:'background:rgba(210,153,34,0.15);color:var(--yellow)'
+};
+var board=[],active=null,activeCI=-1,note='',mode='edit';
 
 async function load(){
   board=await(await fetch('/api/board')).json();
   render();
+}
+
+function shortDate(s){
+  var m=s.match(/^(\d{4})-(\d{2})-(\d{2})\s+(\d{2}:\d{2})/);
+  if(!m)return s;
+  return parseInt(m[3],10)+'/'+parseInt(m[2],10)+'/'+m[1].slice(2)+' '+m[4];
 }
 
 function render(){
@@ -427,13 +493,14 @@ function render(){
     col.tasks.forEach(function(t,ti){
       var c=document.createElement('div');c.className='card'+(active&&active.full_name===t.full_name?' active':'');
       c.draggable=true;c.dataset.ci=ci;c.dataset.ti=ti;
-      var htm='<div class="card-title">'+esc(t.title)+'</div>';
+      var htm='<div class="card-title">';
+      if(t.code)htm+='<span class="card-id">'+esc(t.code)+'</span>';
+      htm+=esc(t.title)+'</div>';
       if(t.preview)htm+='<div class="card-preview">'+esc(t.preview)+'</div>';
       htm+='<div class="card-footer"><span class="card-date">';
       var dt=t.updated||t.date;
-      if(dt)htm+=esc(dt);
+      if(dt)htm+=esc(shortDate(dt));
       htm+='</span><div class="card-meta">';
-      if(t.code)htm+='<span class="card-id">'+esc(t.code)+'</span>';
       t.tags.forEach(function(tag){
         var tc='tag-default';
         if(tag==='coder')tc='tag-coder';else if(tag==='urgent')tc='tag-urgent';else if(tag==='blocked')tc='tag-blocked';
@@ -448,6 +515,7 @@ function render(){
   });
   document.getElementById('count').textContent=total+' stor'+(total===1?'y':'ies');
   document.getElementById('empty').style.display=total?'none':'flex';
+  if(typeof applyFilter==='function')applyFilter();
 }
 
 /* --- Drag & Drop --- */
@@ -501,7 +569,7 @@ brd.addEventListener('click',function(e){
 });
 
 async function openSide(t,ci){
-  active=t;
+  active=t;activeCI=ci;
   var r=await fetch('/api/note?name='+encodeURIComponent(t.full_name));
   note=(await r.json()).content;
   document.getElementById('sBadge').textContent=t.code;
@@ -511,6 +579,7 @@ async function openSide(t,ci){
   document.getElementById('sTitle').textContent=t.title;
   document.getElementById('sCreated').textContent=t.date?'Created: '+t.date:'';
   document.getElementById('sUpdated').textContent=t.updated?'Updated: '+t.updated:'';
+  syncTags();
   showEdit();
   sRatio=0;
   document.getElementById('side').classList.add('open');
@@ -519,7 +588,7 @@ async function openSide(t,ci){
 }
 
 function closeSide(){
-  active=null;mode='edit';sRatio=0;
+  active=null;activeCI=-1;mode='edit';sRatio=0;
   document.getElementById('side').classList.remove('open');
   document.getElementById('sideBg').classList.remove('open');
   render();
@@ -572,9 +641,11 @@ async function saveNote(){
   else return;
   var btn=document.getElementById('btn-save');
   try{
-    var r=await fetch('/api/note',{method:'POST',headers:{'Content-Type':'application/json'},
+    var r1=await fetch('/api/note',{method:'POST',headers:{'Content-Type':'application/json'},
       body:JSON.stringify({name:active.full_name,content:note})});
-    btn.classList.add(r.ok?'ok':'err');
+    var r2=await fetch('/api/board',{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({columns:board})});
+    btn.classList.add(r1.ok&&r2.ok?'ok':'err');
   }catch(e){btn.classList.add('err');}
   setTimeout(function(){btn.classList.remove('ok','err');},1500);
 }
@@ -667,6 +738,53 @@ document.addEventListener('keydown',function(e){
   if((e.ctrlKey||e.metaKey)&&e.key==='s'&&mode!=='view'){e.preventDefault();saveNote();}
 });
 
+/* --- Tag toggles --- */
+function syncTags(){
+  ['coder','urgent','blocked'].forEach(function(tag){
+    var btn=document.getElementById('tag'+tag.charAt(0).toUpperCase()+tag.slice(1));
+    var on=active&&active.tags.indexOf(tag)!==-1;
+    btn.classList.toggle('off',!on);
+    btn.style.cssText=on?(TSTYLE[tag]||''):'';
+  });
+}
+function toggleTag(tag){
+  if(!active)return;
+  var idx=active.tags.indexOf(tag);
+  if(idx===-1)active.tags.push(tag);else active.tags.splice(idx,1);
+  syncTags();
+}
+document.querySelectorAll('.tag-toggle').forEach(function(btn){
+  btn.addEventListener('click',function(){toggleTag(this.dataset.tag);});
+});
+
+/* --- Search / filter --- */
+var searchInput=document.getElementById('searchInput');
+var searchBox=document.getElementById('searchBox');
+var searchClear=document.getElementById('searchClear');
+function norm(s){return s.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();}
+function applyFilter(){
+  var q=norm(searchInput.value.trim());
+  searchBox.classList.toggle('has-value',q.length>0);
+  var shown=0;
+  document.querySelectorAll('.card').forEach(function(c){
+    var ci=+c.dataset.ci,ti=+c.dataset.ti;
+    var t=board[ci]&&board[ci].tasks[ti];
+    if(!t){c.classList.remove('search-hidden');shown++;return;}
+    var hay=norm(t.code+' '+t.title+' '+t.tags.join(' ')+' '+(t.preview||''));
+    var match=!q||hay.indexOf(q)!==-1;
+    c.classList.toggle('search-hidden',!match);
+    if(match)shown++;
+  });
+  document.querySelectorAll('.col-count').forEach(function(el){
+    var col=el.closest('.column');
+    var vis=col.querySelectorAll('.card:not(.search-hidden)').length;
+    el.textContent=vis;
+  });
+}
+searchInput.addEventListener('input',applyFilter);
+searchClear.addEventListener('click',function(){searchInput.value='';applyFilter();searchInput.focus();});
+document.addEventListener('keydown',function(e){if(e.key==='/'&&!e.ctrlKey&&!e.metaKey&&document.activeElement.tagName!=='INPUT'&&document.activeElement.tagName!=='TEXTAREA'&&!document.activeElement.isContentEditable){e.preventDefault();searchInput.focus();searchInput.select();}});
+
 /* --- Markdown renderer --- */
 function renderMd(txt){
   var html='',lines=txt.split('\n'),inCode=false,code=[],inList=false,lt='ul',tbl=[],inTbl=false,ulDepth=0,ulOpen=false;
@@ -717,6 +835,8 @@ function il(t){
 function esc(s){var d=document.createElement('div');d.textContent=s;return d.innerHTML;}
 
 load();
+var es=new EventSource('/api/events');
+es.onmessage=function(e){if(e.data==='reload')load();};
 })();
 </script>
 </body>
@@ -749,6 +869,23 @@ class H(http.server.BaseHTTPRequestHandler):
         elif u.path == "/api/note":
             q = urllib.parse.parse_qs(u.query)
             self.j({"content": get_note(q.get("name", [""])[0])})
+        elif u.path == "/api/events":
+            self.send_response(200)
+            self.send_header("Content-Type", "text/event-stream")
+            self.send_header("Cache-Control", "no-cache")
+            self.send_header("Connection", "keep-alive")
+            self.send_header("X-Accel-Buffering", "no")
+            self.end_headers()
+            try:
+                while True:
+                    if _change.wait(timeout=30):
+                        _change.clear()
+                        self.wfile.write(b"data: reload\n\n")
+                    else:
+                        self.wfile.write(b": heartbeat\n\n")
+                    self.wfile.flush()
+            except (BrokenPipeError, ConnectionResetError, OSError):
+                pass
         else:
             self.send_error(404)
 
@@ -770,10 +907,17 @@ class H(http.server.BaseHTTPRequestHandler):
         else:
             self.send_error(404)
 
+    def handle(self):
+        try:
+            super().handle()
+        except (ConnectionResetError, BrokenPipeError, OSError):
+            pass
+
     def log_message(self, *a):
         pass
 
 
+threading.Thread(target=_watcher, daemon=True).start()
 print(f"Kanban -> http://localhost:{PORT}")
-http.server.HTTPServer.allow_reuse_address = True
-http.server.HTTPServer(("", PORT), H).serve_forever()
+http.server.ThreadingHTTPServer.allow_reuse_address = True
+http.server.ThreadingHTTPServer(("", PORT), H).serve_forever()
