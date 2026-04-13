@@ -20,7 +20,7 @@
   <a href="#-how-it-works">How It Works</a> •
   <a href="#-commands">Commands</a> •
   <a href="#-memory-system">Memory System</a> •
-  <a href="#-story-notes">Story Notes</a> •
+  <a href="#-task-notes">Task Notes</a> •
   <a href="#-cli-compatibility">CLI Compatibility</a>
 </p>
 
@@ -38,7 +38,7 @@ Coder is an **agent instruction set** that turns any LLM CLI into a disciplined 
 - **Human-in-the-loop** — Every plan goes through review before code is written.
 - **Full traceability** — Every decision, change, and iteration is versioned with timestamps.
 - **AI-optimized memory** — Knowledge graph with hierarchical loading, semantic compression, and domain separation. Designed for LLM consumption, not human reading.
-- **Smart bug detection** — Coder identifies if a report is a bug on an existing story or a new task.
+- **Smart bug detection** — Coder identifies if a report is a bug on an existing task or a new task.
 - **CLI-agnostic** — Works with Claude Code, Gemini CLI, Codex CLI, or any agent that reads instruction files.
 
 ---
@@ -107,7 +107,7 @@ Coder auto-creates the full `coder-factory/` structure and indexes your project 
   │                              │──── create note ───────────> │
   │                              │──── add to BACKLOG ────────> │
   │                              │                              │
-  │  move story to PLAN          │                              │
+  │  move task to PLAN          │                              │
   │                              │                              │
   │  "Coder plan"                │                              │
   │─────────────────────────────>│                              │
@@ -134,7 +134,7 @@ Coder auto-creates the full `coder-factory/` structure and indexes your project 
   │                              │                              │
   │  "sidebar doesn't collapse"  │                              │
   │─────────────────────────────>│                              │
-  │                              │──── identify story ────────> │
+  │                              │──── identify task ────────> │
   │                              │──── BUG FIX #1 ────────────> │
   │                              │                              │
   │  validate → DONE             │                              │
@@ -144,62 +144,60 @@ Coder auto-creates the full `coder-factory/` structure and indexes your project 
 
 | Column | Owner | Description |
 |--------|-------|-------------|
-| **BACKLOG** | Coder/Human | Stories created, waiting to be prioritized |
+| **BACKLOG** | Coder/Human | Tasks created, waiting to be prioritized |
 | **PLAN** | Coder | Coder generates detailed plans |
 | **REVIEW** | Human | Human reviews the plan, adds feedback |
 | **EXECUTION** | Coder | Coder writes the actual code |
 | **TESTING** | Human | Human validates the implementation |
-| **DONE** | Human | Story completed |
+| **DONE** | Human | Task completed |
 
 ---
 
 ## ⚡ Commands
 
-All commands require the **"Coder"** prefix to activate the agent. Coder can only work on stories tagged `#coder` — stories without it are human-owned. Stories tagged `#canceled` are always skipped.
+All commands require the **"Coder"** prefix to activate the agent. Coder can only work on tasks tagged `#coder` — tasks without it are human-owned. Tasks tagged `#canceled` are always skipped.
 
 | Command | Description |
 |---------|-------------|
-| `Coder create task <desc>` | Create a story in BACKLOG with note |
-| `Coder create task urgent <desc>` | Same, with `#urgent` tag |
-| `Coder plan` | Plan eligible stories in PLAN column |
-| `Coder execute` | Implement eligible stories in EXECUTION column |
-| `Coder move S001 to PLAN` | Move story between columns |
-| `Coder add to S001 <text>` | Append text to story's USER PROMPT |
+| `Coder create task <desc>` | Create a task in BACKLOG with note |
+| `Coder plan` | Plan eligible tasks in PLAN column |
+| `Coder execute` | Implement eligible tasks in EXECUTION column |
+| `Coder move T001 to PLAN` | Move task between columns |
+| `Coder add to T001 <text>` | Append text to task's USER PROMPT |
 | `Coder status` | Show board summary |
 | `Coder update memory` | Re-index project knowledge base |
-| `Coder for S005 <instruction>` | Add instruction to specific story |
+| `Coder for T005 <instruction>` | Add instruction to specific task |
 | `Coder <bug description>` | Smart detection: bug or new task? |
 
 ### Tags
 
 | Tag | Effect |
 |-----|--------|
-| `#coder` | **Required** — Story assigned to the agent. Without this tag, Coder cannot plan, execute, move, or modify the story |
-| `#urgent` | Processed first within eligible stories |
-| `#canceled` | Story canceled — Coder skips it entirely, only human can toggle |
+| `#coder` | **Required** — Task assigned to the agent. Without this tag, Coder cannot plan, execute, move, or modify the task |
+| `#canceled` | Task canceled — Coder skips it entirely, only human can toggle |
 
 ### Smart Bug Detection
 
-When you report an issue, Coder tries to match it to an existing story (only those with `#coder` and without `#canceled`):
+When you report an issue, Coder tries to match it to an existing task (only those with `#coder` and without `#canceled`):
 
 ```
 > Coder the sidebar doesn't collapse on mobile
 
-Human, this looks like a bug on S025 "Implement sidebar navigation".
+Human, this looks like a bug on T025 "Implement sidebar navigation".
 Should I add a BUG FIX entry there?
 ```
 
-If the matched story is missing `#coder` or has `#canceled`, Coder informs you it cannot work on it. If it can't identify the story, it asks. If it's clearly new, it suggests creating a story. **Nothing goes untracked.**
+If the matched task is missing `#coder` or has `#canceled`, Coder informs you it cannot work on it. If it can't identify the task, it asks. If it's clearly new, it suggests creating a task. **Nothing goes untracked.**
 
 ---
 
-## 📝 Story Notes
+## 📝 Task Notes
 
-Every story gets a dedicated note in `coder-notes/` with this structure:
+Every task gets a dedicated note in `coder-notes/` with this structure:
 
 ```
 ┌──────────────────────────────────┐
-│ # S001 Implement user auth       │
+│ # T001 Implement user auth       │
 │ > Status | Created | Updated     │
 ├──────────────────────────────────┤
 │ USER PROMPT          ← Human     │  You write here. Coder processes
@@ -219,16 +217,16 @@ Every story gets a dedicated note in `coder-notes/` with this structure:
 
 ### USER PROMPT Flow
 
-1. Human writes in USER PROMPT (manually or via `Coder for S005 ...`).
+1. Human writes in USER PROMPT (manually or via `Coder for T005 ...`).
 2. On next state change, Coder processes it into `INSTRUCTIONS #(N+1)`.
 3. USER PROMPT is cleared.
 4. Table of contents is updated.
 
 ### Key Design Decisions
 
-- **Filenames match titles** — `S001 Implement user authentication.md` links directly from the Kanban board via `[[S001 Implement user authentication]]`.
+- **Filenames match titles** — `T001 Implement user authentication.md` links directly from the Kanban board via `[[T001 Implement user authentication]]`.
 - **Titles are clean** — No symbols, no tech dumps. Just a clear summary: "Implement user authentication", not "JS+JWT+Fastify auth module".
-- **Stories (S###)** instead of tasks — aligns with agile terminology.
+- **Tasks use T### IDs** — correlative numbering (T001, T002, T003...) for clear tracking.
 - **All sections are append-only** — PLANNING #1 is never modified; #2 is appended with the delta.
 
 ---
@@ -296,7 +294,7 @@ The agent brain lives in `CODER.md`. Bridge files (`AGENTS.md`, `GEMINI.md`) tel
     ├── AGENTS.md                               # Bridge: Claude Code / Codex CLI
     ├── GEMINI.md                               # Bridge: Gemini CLI
     ├── kanban.py                               # Kanban board manager (python3 kanban.py)
-    ├── story-template.md                       # Story note template
+    ├── task-template.md                       # Task note template
     ├── coder-board.md                          # Kanban board template
     ├── memory.md                               # Main memory index template
     ├── architecture.md                         # Architecture & patterns template
@@ -320,7 +318,7 @@ At runtime, Coder auto-generates the `coder-factory/` structure in your project:
 │   └── knowledge-graph.md                      # Symbol graph & call chains
 ├── coder-board/
 │   └── coder-board.md                          # Kanban board
-└── coder-notes/                                # Story notes (auto-created)
+└── coder-notes/                                # Task notes (auto-created)
 ```
 
 ---
@@ -338,8 +336,8 @@ The server starts at `http://localhost:8089`.
 
 **Board & Cards:**
 - GitHub-dark themed Kanban board with all 6 color-coded columns (BACKLOG, PLAN, REVIEW, EXECUTION, TESTING, DONE)
-- Cards display inline story ID badge (blue/white), title, content preview, short date (d/m/yy HH:MM), and color-coded tags (#coder, #urgent, #canceled)
-- Drag & drop cards between columns — auto-saves board and updates story status and timestamp
+- Cards display inline task ID badge (blue/white), title, content preview, short date (d/m/yy HH:MM), and color-coded tags (#coder, #canceled)
+- Drag & drop cards between columns — auto-saves board and updates task status and timestamp
 
 **Live Reload (SSE):**
 - File watcher thread monitors `coder-board.md` and `coder-notes/` via `mtime` (zero polling, zero disk reads when idle)
@@ -352,16 +350,16 @@ The server starts at `http://localhost:8089`.
 - Keyboard shortcut: press `/` to focus the search box
 - Column counts update to reflect visible cards
 
-**Story Sidebar:**
-- Click any card to open a sidebar with the full story note
+**Task Sidebar:**
+- Click any card to open a sidebar with the full task note
 - Three view modes: **Edit** (WYSIWYG), **Source** (raw Markdown), and **View** (read-only rendered)
-- Tag toggle buttons (`#coder`, `#urgent`, `#canceled`) — click to toggle, persisted on save
+- Tag toggle buttons (`#coder`, `#canceled`) — click to toggle, persisted on save
 - Save changes with Ctrl+S / Cmd+S — scroll position preserved between mode switches
 
 **Built-in Markdown Renderer:**
 - Headers, bold, italic, strikethrough, inline code, code blocks, blockquotes
 - Ordered, unordered, and nested lists with task list support (checkboxes)
-- Tables, internal anchor links, external links, and Obsidian wiki-links (`[[S001 Title]]`)
+- Tables, internal anchor links, external links, and Obsidian wiki-links (`[[T001 Title]]`)
 
 **Extras:**
 - Help modal with all Coder commands, workflow visualization, and tag reference
@@ -381,7 +379,7 @@ The board uses the [Obsidian Kanban plugin](https://github.com/mgmeyers/obsidian
 
 1. Settings → Community Plugins → Browse → **Kanban** → Install → Enable
 2. Open `coder-board.md` — renders as a visual board
-3. Stories auto-link: `[[S001 Implement user authentication]]` opens the note directly
+3. Tasks auto-link: `[[T001 Implement user authentication]]` opens the note directly
 
 ### Settings
 

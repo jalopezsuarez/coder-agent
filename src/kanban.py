@@ -236,7 +236,6 @@ body{font-family:var(--font);font-size:14px;color:var(--text);background:var(--b
 .card-id{font-size:12px;font-family:var(--mono);color:#fff;background:#1f6feb;padding:2px 6px;border-radius:var(--radius-sm);margin-right:5px;vertical-align:baseline}
 .tag{font-size:11px;padding:1px 6px;border-radius:var(--radius-sm);font-weight:500}
 .tag-coder{background:rgba(63,185,80,0.15);color:#7afa4f}
-.tag-urgent{background:rgba(210,153,34,0.15);color:#f5d14f}
 .tag-canceled{background:rgba(248,81,73,0.15);color:var(--red)}
 .tag-default{background:var(--btn);color:var(--text2)}
 
@@ -348,12 +347,12 @@ body{font-family:var(--font);font-size:14px;color:var(--text);background:var(--b
     <div class="header-left">
       <svg width="20" height="20" viewBox="0 0 16 16" fill="var(--text2)"><path fill-rule="evenodd" d="M1.75 1.5a.25.25 0 0 0-.25.25v12.5c0 .138.112.25.25.25h12.5a.25.25 0 0 0 .25-.25V1.75a.25.25 0 0 0-.25-.25H1.75ZM0 1.75C0 .784.784 0 1.75 0h12.5C15.216 0 16 .784 16 1.75v12.5A1.75 1.75 0 0 1 14.25 16H1.75A1.75 1.75 0 0 1 0 14.25V1.75Zm9.22 3.72a.75.75 0 0 0 0 1.06L10.69 8 9.22 9.47a.75.75 0 1 0 1.06 1.06l2-2a.75.75 0 0 0 0-1.06l-2-2a.75.75 0 0 0-1.06 0ZM6.78 6.53a.75.75 0 0 0-1.06-1.06l-2 2a.75.75 0 0 0 0 1.06l2 2a.75.75 0 1 0 1.06-1.06L5.31 8l1.47-1.47Z"/></svg>
       <span class="header-title">Coder Agent</span>
-      <span class="header-count" id="count">0 stories</span>
+      <span class="header-count" id="count">0 tasks</span>
     </div>
     <div class="header-right">
       <div class="search-box" id="searchBox">
         <svg viewBox="0 0 16 16" fill="currentColor"><path d="M10.68 11.74a6 6 0 0 1-7.922-8.982 6 6 0 0 1 8.982 7.922l3.04 3.04a.749.749 0 0 1-.326 1.275.749.749 0 0 1-.734-.215ZM11.5 7a4.499 4.499 0 1 0-8.997 0A4.499 4.499 0 0 0 11.5 7Z"/></svg>
-        <input class="search-input" id="searchInput" type="text" placeholder="Filter stories…" autocomplete="off" spellcheck="false">
+        <input class="search-input" id="searchInput" type="text" placeholder="Filter tasks…" autocomplete="off" spellcheck="false">
         <button class="search-clear" id="searchClear" title="Clear">&times;</button>
       </div>
       <button class="btn-icon" id="helpBtn" title="Help">
@@ -366,7 +365,7 @@ body{font-family:var(--font);font-size:14px;color:var(--text);background:var(--b
 
 <div class="empty" id="empty">
   <div class="empty-box">
-    <p>No stories loaded</p>
+    <p>No tasks loaded</p>
     <p class="sub">Board file is empty</p>
   </div>
 </div>
@@ -383,12 +382,12 @@ body{font-family:var(--font);font-size:14px;color:var(--text);background:var(--b
     <div class="help-body">
       <div class="help-section">
         <h3>Commands</h3>
-        <div class="help-row"><code>Coder create task &lt;desc&gt;</code><span>Create story in BACKLOG</span></div>
-        <div class="help-row"><code>Coder plan</code><span>Plan stories in PLAN column</span></div>
-        <div class="help-row"><code>Coder execute</code><span>Implement stories in EXECUTION</span></div>
-        <div class="help-row"><code>Coder move S001 to PLAN</code><span>Move story between columns</span></div>
-        <div class="help-row"><code>Coder add to S001 &lt;text&gt;</code><span>Append to USER PROMPT</span></div>
-        <div class="help-row"><code>Coder for S001 &lt;instr&gt;</code><span>Add instruction directly</span></div>
+        <div class="help-row"><code>Coder create task &lt;desc&gt;</code><span>Create task in BACKLOG</span></div>
+        <div class="help-row"><code>Coder plan</code><span>Plan tasks in PLAN column</span></div>
+        <div class="help-row"><code>Coder execute</code><span>Implement tasks in EXECUTION</span></div>
+        <div class="help-row"><code>Coder move T001 to PLAN</code><span>Move task between columns</span></div>
+        <div class="help-row"><code>Coder add to T001 &lt;text&gt;</code><span>Append to USER PROMPT</span></div>
+        <div class="help-row"><code>Coder for T001 &lt;instr&gt;</code><span>Add instruction directly</span></div>
         <div class="help-row"><code>Coder status</code><span>Board summary</span></div>
         <div class="help-row"><code>Coder update memory</code><span>Re-index knowledge base</span></div>
         <div class="help-row"><code>Coder &lt;bug desc&gt;</code><span>Smart bug detection</span></div>
@@ -414,9 +413,8 @@ body{font-family:var(--font);font-size:14px;color:var(--text);background:var(--b
       </div>
       <div class="help-section">
         <h3>Tags</h3>
-        <div class="help-row"><span class="tag tag-coder" style="padding:2px 8px">#coder</span><span>Assigned to agent — required for Coder to work on a story</span></div>
-        <div class="help-row"><span class="tag tag-urgent" style="padding:2px 8px">#urgent</span><span>Processed first within eligible stories</span></div>
-        <div class="help-row"><span class="tag tag-canceled" style="padding:2px 8px">#canceled</span><span>Story canceled — agent skips it, only human can toggle</span></div>
+        <div class="help-row"><span class="tag tag-coder" style="padding:2px 8px">#coder</span><span>Assigned to agent — required for Coder to work on a task</span></div>
+        <div class="help-row"><span class="tag tag-canceled" style="padding:2px 8px">#canceled</span><span>Task canceled — agent skips it, only human can toggle</span></div>
       </div>
     </div>
   </div>
@@ -439,7 +437,6 @@ body{font-family:var(--font);font-size:14px;color:var(--text);background:var(--b
   <div class="side-meta">
     <div class="side-tags">
       <a class="tag-toggle off" id="tagCoder" data-tag="coder">#coder</a>
-      <a class="tag-toggle off" id="tagUrgent" data-tag="urgent">#urgent</a>
       <a class="tag-toggle off" id="tagCanceled" data-tag="canceled">#canceled</a>
     </div>
     <div class="side-dates">
@@ -456,8 +453,8 @@ body{font-family:var(--font);font-size:14px;color:var(--text);background:var(--b
     <div id="sContent"></div>
     <details class="side-danger" id="sDanger" style="display:none">
       <summary>Danger zone</summary>
-      <p>This action is irreversible. The story will be removed from the board and its note file permanently deleted.</p>
-      <button class="btn-danger" id="btn-delete">Delete story</button>
+      <p>This action is irreversible. The task will be removed from the board and its note file permanently deleted.</p>
+      <button class="btn-danger" id="btn-delete">Delete task</button>
     </details>
   </div>
 </div>
@@ -475,7 +472,6 @@ var SSTYLE={
 };
 var TSTYLE={
   coder:'background:rgba(63,185,80,0.15);color:#7afa4f',
-  urgent:'background:rgba(210,153,34,0.15);color:#f5d14f',
   canceled:'background:rgba(248,81,73,0.15);color:var(--red)'
 };
 var board=[],active=null,activeCI=-1,note='',mode='edit';
@@ -514,7 +510,7 @@ function render(){
       htm+='</span><div class="card-meta">';
       t.tags.forEach(function(tag){
         var tc='tag-default';
-        if(tag==='coder')tc='tag-coder';else if(tag==='urgent')tc='tag-urgent';else if(tag==='canceled')tc='tag-canceled';
+        if(tag==='coder')tc='tag-coder';else if(tag==='canceled')tc='tag-canceled';
         htm+='<span class="tag '+tc+'">#'+esc(tag)+'</span>';
       });
       htm+='</div></div>';
@@ -524,7 +520,7 @@ function render(){
     d.appendChild(cards);
     el.appendChild(d);
   });
-  document.getElementById('count').textContent=total+' stor'+(total===1?'y':'ies');
+  document.getElementById('count').textContent=total+' task'+(total===1?'':'s');
   document.getElementById('empty').style.display=total?'none':'flex';
   if(typeof applyFilter==='function')applyFilter();
 }
@@ -663,16 +659,16 @@ async function saveNote(){
   setTimeout(function(){btn.classList.remove('ok','err');},1500);
 }
 
-async function deleteStory(){
+async function deleteTask(){
   if(!active)return;
-  if(!confirm('Delete "'+active.full_name+'"?\n\nThis will remove the story from the board and delete its note file permanently.'))return;
+  if(!confirm('Delete "'+active.full_name+'"?\n\nThis will remove the task from the board and delete its note file permanently.'))return;
   var name=active.full_name;
   board.forEach(function(col){col.tasks=col.tasks.filter(function(t){return t.full_name!==name;});});
   await fetch('/api/board',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({columns:board})});
   await fetch('/api/delete',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:name})});
   closeSide();
 }
-document.getElementById('btn-delete').addEventListener('click',deleteStory);
+document.getElementById('btn-delete').addEventListener('click',deleteTask);
 
 function htmlToMd(el){
   function walk(node){
@@ -764,7 +760,7 @@ document.addEventListener('keydown',function(e){
 
 /* --- Tag toggles --- */
 function syncTags(){
-  ['coder','urgent','canceled'].forEach(function(tag){
+  ['coder','canceled'].forEach(function(tag){
     var btn=document.getElementById('tag'+tag.charAt(0).toUpperCase()+tag.slice(1));
     var on=active&&active.tags.indexOf(tag)!==-1;
     btn.classList.toggle('off',!on);
