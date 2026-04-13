@@ -67,14 +67,8 @@ claude    # or gemini / codex
 ```bash
 run coder-agent/src/AGENTS.md
 ```
-```
-Human, where should I create or find coder-factory?                                                                                                           
-Give me the full path (it can be different from the current project).                                                                                       
-I cannot start working without this path.   
-```
-```
-./coder-agent
-```
+
+Coder auto-creates the full `coder-factory/` structure and indexes your project into memory on first run.
 
 ### 4. Start working
 
@@ -85,22 +79,23 @@ I cannot start working without this path.
 > Coder status
 ```
 
-Coder auto-creates the full `coder-factory/` structure and indexes your project into memory on first run.
-
 ### Recommendations
 
-- **Add `coder-agent` to your `.gitignore`** — The cloned repository and all generated artifacts should not be committed to your project.
+**Use the `coder-agent` folder as the `coder-factory` path** — When Coder asks for the factory path, point it to the same `coder-agent` directory. This keeps all Coder artifacts (`coder-factory/`, notes, board, memory) contained inside the gitignored folder, keeping your project tree clean.
+
+  ```
+  Human, where should I create or find coder-factory?                                                                                                           
+  Give me the full path (it can be different from the current project).                                                                                       
+  I cannot start working without this path.
+
+  > ./coder-agent
+  ```
+
+**Add `coder-agent` to your `.gitignore`** — The cloned repository and all generated artifacts should not be committed to your project.
 
   ```bash
   echo "coder-agent" >> .gitignore
-  ```
-
-- **Use the `coder-agent` folder as the `coder-factory` path** — When Coder asks for the factory path, point it to the same `coder-agent` directory. This keeps all Coder artifacts (`coder-factory/`, notes, board, memory) contained inside the gitignored folder, keeping your project tree clean.
-
-  ```
-  Human, where should I create or find coder-factory?
-  > ./coder-agent
-  ```
+  ```  
 
 ---
 
