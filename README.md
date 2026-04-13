@@ -99,6 +99,58 @@ Coder auto-creates the full `coder-factory/` structure and indexes your project 
 
 ---
 
+## 🖥️ Kanban Board Manager
+
+A self-contained Kanban board manager at `coder-factory/kanban.py`. Zero external dependencies — pure Python 3.
+
+**Basic start**
+```bash
+python3 kanban.py
+```
+
+**Advanced start** *(kill existing process + restart in background)*
+```bash
+pkill -f "kanban.py"; sleep 1 && nohup python3 kanban.py 2>&1 &
+```
+
+The server starts at `http://localhost:8089`.
+
+**Board & Cards:**
+- GitHub-dark themed Kanban board with all 6 color-coded columns (BACKLOG, PLAN, REVIEW, EXECUTION, TESTING, DONE)
+- Cards display inline task ID badge (blue/white), title, content preview, short date (d/m/yy HH:MM), and color-coded tags (#coder, #canceled)
+- Drag & drop cards between columns — auto-saves board and updates task status and timestamp
+
+**Live Reload (SSE):**
+- File watcher thread monitors `coder-board.md` and `coder-notes/` via `mtime` (zero polling, zero disk reads when idle)
+- Server-Sent Events push changes to the browser — board updates automatically within ~1 second
+- Single persistent connection with automatic reconnection — no repeated HTTP requests
+
+**Search & Filter:**
+- Real-time search input in the toolbar — filters cards as you type
+- Accent and case insensitive (e.g., "informacion" matches "Información")
+- Keyboard shortcut: press `/` to focus the search box
+- Column counts update to reflect visible cards
+
+**Task Sidebar:**
+- Click any card to open a sidebar with the full task note
+- Three view modes: **Edit** (WYSIWYG), **Source** (raw Markdown), and **View** (read-only rendered)
+- Tag toggle buttons (`#coder`, `#canceled`) — click to toggle, persisted on save
+- Save changes with Ctrl+S / Cmd+S — scroll position preserved between mode switches
+
+**Built-in Markdown Renderer:**
+- Headers, bold, italic, strikethrough, inline code, code blocks, blockquotes
+- Ordered, unordered, and nested lists with task list support (checkboxes)
+- Tables, internal anchor links, external links, and Obsidian wiki-links (`[[C1 Title]]`)
+
+**Extras:**
+- Help modal with all Coder commands, workflow visualization, and tag reference
+- REST API (`/api/board`, `/api/note`, `/api/events`) for board state, notes, and live events
+- `ThreadingHTTPServer` for concurrent SSE streams and HTTP requests
+- Responsive layout — sidebar goes full-width on mobile
+- Keyboard shortcuts: Escape to close, Ctrl+S / Cmd+S to save, `/` to search
+
+---
+
 ## 🔄 How It Works
 
 ```
@@ -321,59 +373,6 @@ At runtime, Coder auto-generates the `coder-factory/` structure in your project:
 │   └── coder-board.md                          # Kanban board
 └── coder-notes/                                # Task notes (auto-created)
 ```
-
----
-
-## 🖥️ Kanban Board Manager
-
-A self-contained Kanban board manager at `coder-factory/kanban.py`. Zero external dependencies — pure Python 3.
-
-**Basic start**
-```bash
-python3 kanban.py
-```
-
-**Advanced start** *(kill existing process + restart in background)*
-```bash
-pkill -f "kanban.py"; sleep 1 && nohup python3 kanban.py 2>&1 &
-```
-
-The server starts at `http://localhost:8089`.
-
-**Board & Cards:**
-- GitHub-dark themed Kanban board with all 6 color-coded columns (BACKLOG, PLAN, REVIEW, EXECUTION, TESTING, DONE)
-- Cards display inline task ID badge (blue/white), title, content preview, short date (d/m/yy HH:MM), and color-coded tags (#coder, #canceled)
-- Drag & drop cards between columns — auto-saves board and updates task status and timestamp
-
-**Live Reload (SSE):**
-- File watcher thread monitors `coder-board.md` and `coder-notes/` via `mtime` (zero polling, zero disk reads when idle)
-- Server-Sent Events push changes to the browser — board updates automatically within ~1 second
-- Single persistent connection with automatic reconnection — no repeated HTTP requests
-
-**Search & Filter:**
-- Real-time search input in the toolbar — filters cards as you type
-- Accent and case insensitive (e.g., "informacion" matches "Información")
-- Keyboard shortcut: press `/` to focus the search box
-- Column counts update to reflect visible cards
-
-**Task Sidebar:**
-- Click any card to open a sidebar with the full task note
-- Three view modes: **Edit** (WYSIWYG), **Source** (raw Markdown), and **View** (read-only rendered)
-- Tag toggle buttons (`#coder`, `#canceled`) — click to toggle, persisted on save
-- Save changes with Ctrl+S / Cmd+S — scroll position preserved between mode switches
-
-**Built-in Markdown Renderer:**
-- Headers, bold, italic, strikethrough, inline code, code blocks, blockquotes
-- Ordered, unordered, and nested lists with task list support (checkboxes)
-- Tables, internal anchor links, external links, and Obsidian wiki-links (`[[C1 Title]]`)
-
-**Extras:**
-- Help modal with all Coder commands, workflow visualization, and tag reference
-- REST API (`/api/board`, `/api/note`, `/api/events`) for board state, notes, and live events
-- `ThreadingHTTPServer` for concurrent SSE streams and HTTP requests
-- Responsive layout — sidebar goes full-width on mobile
-- Keyboard shortcuts: Escape to close, Ctrl+S / Cmd+S to save, `/` to search
-- Obsidian Kanban plugin compatible — preserves board settings
 
 ---
 
