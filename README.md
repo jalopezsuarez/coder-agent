@@ -61,11 +61,15 @@ cp coder-agent/src/{CODER.md,AGENTS.md,GEMINI.md} .
 claude    # or gemini / codex
 ```
 
-### 3. Coder asks for the factory path
+### 3. Initialize Coder and set the factory path
 
+```bash
+start coder-agent/src/CODER.md
 ```
-Human, where should I create or find coder-factory?
-Give me the full path. I cannot start working without it.
+```
+Human, where should I create or find coder-factory?                                                                                                           
+Give me the full path (it can be different from the current project).                                                                                       
+I cannot start working without this path.   
 ```
 
 ### 4. Start working
