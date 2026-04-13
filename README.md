@@ -110,7 +110,7 @@ python3 kanban.py
 
 **Advanced start** *(kill existing process + restart in background)*
 ```bash
-pkill -f "kanban.py"; sleep 1 && nohup python3 kanban.py 2>&1 &
+pkill -f "kanban.py"; sleep 1 && python3 kanban.py 2>&1 &
 ```
 
 The server starts at `http://localhost:8089`.
