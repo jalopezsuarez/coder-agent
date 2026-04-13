@@ -65,7 +65,7 @@ claude    # or gemini / codex
 ### 3. Initialize Coder and set the factory path
 
 ```bash
-start coder-agent/src/AGENTS.md
+run coder-agent/src/AGENTS.md
 ```
 ```
 Human, where should I create or find coder-factory?                                                                                                           
