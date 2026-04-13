@@ -235,9 +235,9 @@ body{font-family:var(--font);font-size:14px;color:var(--text);background:var(--b
 .card-meta{display:flex;align-items:center;gap:4px;flex-wrap:wrap;justify-content:flex-end}
 .card-id{font-size:12px;font-family:var(--mono);color:#fff;background:#1f6feb;padding:2px 6px;border-radius:var(--radius-sm);margin-right:5px;vertical-align:baseline}
 .tag{font-size:11px;padding:1px 6px;border-radius:var(--radius-sm);font-weight:500}
-.tag-coder{background:rgba(56,139,253,0.15);color:var(--accent)}
-.tag-urgent{background:rgba(248,81,73,0.15);color:var(--red)}
-.tag-blocked{background:rgba(210,153,34,0.15);color:var(--yellow)}
+.tag-coder{background:rgba(63,185,80,0.15);color:#7afa4f}
+.tag-urgent{background:rgba(210,153,34,0.15);color:#f5d14f}
+.tag-canceled{background:rgba(248,81,73,0.15);color:var(--red)}
 .tag-default{background:var(--btn);color:var(--text2)}
 
 .empty{position:absolute;inset:0;display:none;align-items:center;justify-content:center;pointer-events:none}
@@ -288,20 +288,24 @@ body{font-family:var(--font);font-size:14px;color:var(--text);background:var(--b
 .side-btn:last-child{border-radius:0 var(--radius-sm) var(--radius-sm) 0}
 .side-btn:not(:first-child){border-left:0}
 .side-btn svg{width:14px;height:14px}
-.side-body{flex:1;overflow:hidden;display:flex;flex-direction:column;min-height:0}
-.side-body .md{flex:1;overflow-y:auto;padding:32px}
-.side-body .md::-webkit-scrollbar{width:5px}
-.side-body .md::-webkit-scrollbar-track{background:transparent}
-.side-body .md::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
-.side-body textarea{flex:1;background:var(--bg);color:var(--text);border:none;padding:16px 32px;font-family:var(--mono);font-size:13px;resize:none;line-height:1.5;outline:none}
-.side-body textarea::-webkit-scrollbar{width:5px}
-.side-body textarea::-webkit-scrollbar-track{background:transparent}
-.side-body textarea::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+.side-body{flex:1;overflow-y:auto;display:flex;flex-direction:column;min-height:0}
+.side-body .md{flex:1;padding:32px}
+.side-body::-webkit-scrollbar{width:5px}
+.side-body::-webkit-scrollbar-track{background:transparent}
+.side-body::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+.side-body textarea{width:100%;min-height:60vh;background:var(--bg);color:var(--text);border:none;padding:16px 32px;font-family:var(--mono);font-size:13px;resize:none;line-height:1.5;outline:none}
 .btn-save{display:flex;align-items:center;justify-content:center;width:32px;height:32px;border:1px solid var(--border);border-radius:var(--radius);background:var(--btn);color:var(--text2);cursor:pointer;flex-shrink:0;transition:background .2s,border-color .2s,color .2s}
 .btn-save:hover{background:var(--btn-hover);color:var(--text);border-color:var(--text2)}
 .btn-save.ok{background:#238636;border-color:#2ea043;color:#fff}
 .btn-save.err{background:#da3633;border-color:#f85149;color:#fff}
 .btn-save svg{width:16px;height:16px}
+.side-danger{border-top:1px solid var(--border);padding:0 32px}
+.side-danger summary{font-size:11px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:0.5px;padding:14px 0;cursor:pointer;list-style:none}
+.side-danger summary::-webkit-details-marker{display:none}
+.side-danger summary:hover{color:var(--red)}
+.side-danger p{font-size:12px;color:var(--text2);margin:0 0 10px;line-height:1.5}
+.btn-danger{font-size:12px;font-family:var(--font);padding:4px 12px;border:1px solid var(--red);border-radius:var(--radius);background:transparent;color:var(--red);cursor:pointer;margin-bottom:20px}
+.btn-danger:hover{background:var(--red);color:#fff}
 
 /* GitHub Markdown */
 .md{font-family:var(--font);font-size:14px;line-height:1.5;word-wrap:break-word;color:var(--text)}
@@ -410,9 +414,9 @@ body{font-family:var(--font);font-size:14px;color:var(--text);background:var(--b
       </div>
       <div class="help-section">
         <h3>Tags</h3>
-        <div class="help-row"><span class="tag tag-coder">#coder</span><span>Assigned to agent</span></div>
-        <div class="help-row"><span class="tag tag-urgent">#urgent</span><span>Processed first</span></div>
-        <div class="help-row"><span class="tag tag-blocked">#blocked</span><span>Agent skips it</span></div>
+        <div class="help-row"><span class="tag tag-coder" style="padding:2px 8px">#coder</span><span>Assigned to agent — required for Coder to work on a story</span></div>
+        <div class="help-row"><span class="tag tag-urgent" style="padding:2px 8px">#urgent</span><span>Processed first within eligible stories</span></div>
+        <div class="help-row"><span class="tag tag-canceled" style="padding:2px 8px">#canceled</span><span>Story canceled — agent skips it, only human can toggle</span></div>
       </div>
     </div>
   </div>
@@ -436,7 +440,7 @@ body{font-family:var(--font);font-size:14px;color:var(--text);background:var(--b
     <div class="side-tags">
       <a class="tag-toggle off" id="tagCoder" data-tag="coder">#coder</a>
       <a class="tag-toggle off" id="tagUrgent" data-tag="urgent">#urgent</a>
-      <a class="tag-toggle off" id="tagBlocked" data-tag="blocked">#blocked</a>
+      <a class="tag-toggle off" id="tagCanceled" data-tag="canceled">#canceled</a>
     </div>
     <div class="side-dates">
       <span id="sCreated"></span>
@@ -448,7 +452,14 @@ body{font-family:var(--font);font-size:14px;color:var(--text);background:var(--b
       <button class="side-btn" id="btn-view" title="View"><svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 2c1.981 0 3.671.992 4.933 2.078 1.27 1.091 2.187 2.345 2.637 3.023a1.62 1.62 0 0 1 0 1.798c-.45.678-1.367 1.932-2.637 3.023C11.67 13.008 9.981 14 8 14c-1.981 0-3.671-.992-4.933-2.078C1.797 10.831.88 9.577.43 8.899a1.62 1.62 0 0 1 0-1.798c.45-.678 1.367-1.932 2.637-3.023C4.33 2.992 6.019 2 8 2ZM1.679 7.932a.12.12 0 0 0 0 .136c.411.622 1.241 1.75 2.366 2.717C5.176 11.758 6.527 12.5 8 12.5c1.473 0 2.825-.742 3.955-1.715 1.124-.967 1.954-2.096 2.366-2.717a.12.12 0 0 0 0-.136c-.412-.621-1.242-1.75-2.366-2.717C10.824 4.242 9.473 3.5 8 3.5c-1.473 0-2.824.742-3.955 1.715-1.124.967-1.954 2.096-2.366 2.717ZM8 10a2 2 0 1 1-.001-3.999A2 2 0 0 1 8 10Z"/></svg></button>
     </div>
   </div>
-  <div class="side-body" id="sBody"></div>
+  <div class="side-body" id="sBody">
+    <div id="sContent"></div>
+    <details class="side-danger" id="sDanger" style="display:none">
+      <summary>Danger zone</summary>
+      <p>This action is irreversible. The story will be removed from the board and its note file permanently deleted.</p>
+      <button class="btn-danger" id="btn-delete">Delete story</button>
+    </details>
+  </div>
 </div>
 
 <script>
@@ -463,9 +474,9 @@ var SSTYLE={
   DONE:'background:rgba(63,185,80,0.15);color:var(--green)'
 };
 var TSTYLE={
-  coder:'background:rgba(56,139,253,0.15);color:var(--accent)',
-  urgent:'background:rgba(248,81,73,0.15);color:var(--red)',
-  blocked:'background:rgba(210,153,34,0.15);color:var(--yellow)'
+  coder:'background:rgba(63,185,80,0.15);color:#7afa4f',
+  urgent:'background:rgba(210,153,34,0.15);color:#f5d14f',
+  canceled:'background:rgba(248,81,73,0.15);color:var(--red)'
 };
 var board=[],active=null,activeCI=-1,note='',mode='edit';
 
@@ -503,7 +514,7 @@ function render(){
       htm+='</span><div class="card-meta">';
       t.tags.forEach(function(tag){
         var tc='tag-default';
-        if(tag==='coder')tc='tag-coder';else if(tag==='urgent')tc='tag-urgent';else if(tag==='blocked')tc='tag-blocked';
+        if(tag==='coder')tc='tag-coder';else if(tag==='urgent')tc='tag-urgent';else if(tag==='canceled')tc='tag-canceled';
         htm+='<span class="tag '+tc+'">#'+esc(tag)+'</span>';
       });
       htm+='</div></div>';
@@ -589,6 +600,7 @@ async function openSide(t,ci){
 
 function closeSide(){
   active=null;activeCI=-1;mode='edit';sRatio=0;
+  document.getElementById('sDanger').style.display='none';
   document.getElementById('side').classList.remove('open');
   document.getElementById('sideBg').classList.remove('open');
   render();
@@ -602,53 +614,65 @@ function setBtn(m){
 }
 
 var sRatio=0;
-function scrollEl(){return document.querySelector('#sBody .md')||document.getElementById('editor');}
+function scrollEl(){return document.getElementById('sBody');}
 function saveScroll(){var el=scrollEl();if(!el)return;var mx=el.scrollHeight-el.clientHeight;sRatio=mx>0?el.scrollTop/mx:0;}
 function restoreScroll(){var el=scrollEl();if(!el)return;var mx=el.scrollHeight-el.clientHeight;el.scrollTop=Math.round(sRatio*mx);}
+
+function showDanger(){var d=document.getElementById('sDanger');d.style.display='';d.removeAttribute('open');}
+document.getElementById('sDanger').addEventListener('toggle',function(){if(this.open)this.scrollIntoView({behavior:'smooth',block:'end'});});
 
 function showView(){
   saveScroll();
   setBtn('view');
-  document.getElementById('sBody').innerHTML='<div class="md">'+renderMd(note)+'</div>';
-
+  document.getElementById('sContent').innerHTML='<div class="md">'+renderMd(note)+'</div>';
+  showDanger();
   requestAnimationFrame(restoreScroll);
 }
 
 function showEdit(){
   saveScroll();
   setBtn('edit');
-  document.getElementById('sBody').innerHTML='<div class="md editable" contenteditable="true">'+renderMd(note)+'</div>';
-
+  document.getElementById('sContent').innerHTML='<div class="md editable" contenteditable="true">'+renderMd(note)+'</div>';
+  showDanger();
   requestAnimationFrame(restoreScroll);
 }
 
 function showSource(){
   saveScroll();
   setBtn('source');
-  var body=document.getElementById('sBody');
-  body.innerHTML='';
+  var ct=document.getElementById('sContent');
+  ct.innerHTML='';
   var ta=document.createElement('textarea');
   ta.id='editor';ta.value=note;ta.spellcheck=false;
-  body.appendChild(ta);
-
+  ct.appendChild(ta);
+  showDanger();
   requestAnimationFrame(restoreScroll);
 }
 
 async function saveNote(){
   if(!active)return;
   if(mode==='source')note=document.getElementById('editor').value;
-  else if(mode==='edit')note=htmlToMd(document.querySelector('#sBody .md'));
+  else if(mode==='edit')note=htmlToMd(document.querySelector('#sContent .md'));
   else return;
   var btn=document.getElementById('btn-save');
   try{
-    var r1=await fetch('/api/note',{method:'POST',headers:{'Content-Type':'application/json'},
+    var r=await fetch('/api/note',{method:'POST',headers:{'Content-Type':'application/json'},
       body:JSON.stringify({name:active.full_name,content:note})});
-    var r2=await fetch('/api/board',{method:'POST',headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({columns:board})});
-    btn.classList.add(r1.ok&&r2.ok?'ok':'err');
+    btn.classList.add(r.ok?'ok':'err');
   }catch(e){btn.classList.add('err');}
   setTimeout(function(){btn.classList.remove('ok','err');},1500);
 }
+
+async function deleteStory(){
+  if(!active)return;
+  if(!confirm('Delete "'+active.full_name+'"?\n\nThis will remove the story from the board and delete its note file permanently.'))return;
+  var name=active.full_name;
+  board.forEach(function(col){col.tasks=col.tasks.filter(function(t){return t.full_name!==name;});});
+  await fetch('/api/board',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({columns:board})});
+  await fetch('/api/delete',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:name})});
+  closeSide();
+}
+document.getElementById('btn-delete').addEventListener('click',deleteStory);
 
 function htmlToMd(el){
   function walk(node){
@@ -740,7 +764,7 @@ document.addEventListener('keydown',function(e){
 
 /* --- Tag toggles --- */
 function syncTags(){
-  ['coder','urgent','blocked'].forEach(function(tag){
+  ['coder','urgent','canceled'].forEach(function(tag){
     var btn=document.getElementById('tag'+tag.charAt(0).toUpperCase()+tag.slice(1));
     var on=active&&active.tags.indexOf(tag)!==-1;
     btn.classList.toggle('off',!on);
@@ -752,6 +776,7 @@ function toggleTag(tag){
   var idx=active.tags.indexOf(tag);
   if(idx===-1)active.tags.push(tag);else active.tags.splice(idx,1);
   syncTags();
+  fetch('/api/board',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({columns:board})});
 }
 document.querySelectorAll('.tag-toggle').forEach(function(btn){
   btn.addEventListener('click',function(){toggleTag(this.dataset.tag);});
@@ -903,6 +928,13 @@ class H(http.server.BaseHTTPRequestHandler):
             self.j({"ok": True})
         elif self.path == "/api/note":
             save_note(body.get("name", ""), body.get("content", ""))
+            self.j({"ok": True})
+        elif self.path == "/api/delete":
+            name = body.get("name", "")
+            if safe(name):
+                p = os.path.join(NOTES, name + ".md")
+                if os.path.exists(p):
+                    os.remove(p)
             self.j({"ok": True})
         else:
             self.send_error(404)

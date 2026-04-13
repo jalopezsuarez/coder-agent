@@ -155,7 +155,7 @@ Coder auto-creates the full `coder-factory/` structure and indexes your project 
 
 ## ⚡ Commands
 
-All commands require the **"Coder"** prefix to activate the agent. Coder can only work on stories tagged `#coder` — stories without it are human-owned. Stories tagged `#blocked` are always skipped.
+All commands require the **"Coder"** prefix to activate the agent. Coder can only work on stories tagged `#coder` — stories without it are human-owned. Stories tagged `#canceled` are always skipped.
 
 | Command | Description |
 |---------|-------------|
@@ -176,11 +176,11 @@ All commands require the **"Coder"** prefix to activate the agent. Coder can onl
 |-----|--------|
 | `#coder` | **Required** — Story assigned to the agent. Without this tag, Coder cannot plan, execute, move, or modify the story |
 | `#urgent` | Processed first within eligible stories |
-| `#blocked` | Coder skips it entirely — overrides `#coder` until removed |
+| `#canceled` | Story canceled — Coder skips it entirely, only human can toggle |
 
 ### Smart Bug Detection
 
-When you report an issue, Coder tries to match it to an existing story (only those with `#coder` and without `#blocked`):
+When you report an issue, Coder tries to match it to an existing story (only those with `#coder` and without `#canceled`):
 
 ```
 > Coder the sidebar doesn't collapse on mobile
@@ -189,7 +189,7 @@ Human, this looks like a bug on S025 "Implement sidebar navigation".
 Should I add a BUG FIX entry there?
 ```
 
-If the matched story is missing `#coder` or has `#blocked`, Coder informs you it cannot work on it. If it can't identify the story, it asks. If it's clearly new, it suggests creating a story. **Nothing goes untracked.**
+If the matched story is missing `#coder` or has `#canceled`, Coder informs you it cannot work on it. If it can't identify the story, it asks. If it's clearly new, it suggests creating a story. **Nothing goes untracked.**
 
 ---
 
@@ -338,7 +338,7 @@ The server starts at `http://localhost:8089`.
 
 **Board & Cards:**
 - GitHub-dark themed Kanban board with all 6 color-coded columns (BACKLOG, PLAN, REVIEW, EXECUTION, TESTING, DONE)
-- Cards display inline story ID badge (blue/white), title, content preview, short date (d/m/yy HH:MM), and color-coded tags (#coder, #urgent, #blocked)
+- Cards display inline story ID badge (blue/white), title, content preview, short date (d/m/yy HH:MM), and color-coded tags (#coder, #urgent, #canceled)
 - Drag & drop cards between columns — auto-saves board and updates story status and timestamp
 
 **Live Reload (SSE):**
@@ -355,7 +355,7 @@ The server starts at `http://localhost:8089`.
 **Story Sidebar:**
 - Click any card to open a sidebar with the full story note
 - Three view modes: **Edit** (WYSIWYG), **Source** (raw Markdown), and **View** (read-only rendered)
-- Tag toggle buttons (`#coder`, `#urgent`, `#blocked`) — click to toggle, persisted on save
+- Tag toggle buttons (`#coder`, `#urgent`, `#canceled`) — click to toggle, persisted on save
 - Save changes with Ctrl+S / Cmd+S — scroll position preserved between mode switches
 
 **Built-in Markdown Renderer:**
