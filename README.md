@@ -423,5 +423,5 @@ MIT
 ---
 
 <p align="center">
-  <sub>Built for developers who want AI coding assistants that follow process, not chaos.</sub>
+  <sub>Jose Antonio Lopez - Built for developers who want AI coding assistants that follow process, not chaos.</sub>
 </p>
