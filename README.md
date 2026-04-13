@@ -45,13 +45,13 @@ Coder is an **agent instruction set** that turns any LLM CLI into a disciplined 
 
 ## 🚀 Quick Start – run inside your project directory
 
-### 1. Clone and copy (from your project directory)
+### 1. Clone and copy
 
 ```bash
 git clone https://github.com/jalopezsuarez/coder-agent.git
 ```
 
-### 2. Launch your CLI (from your project directory)
+### 2. Launch your CLI
 
 ```bash
 claude    # or gemini / codex
