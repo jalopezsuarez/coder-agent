@@ -53,7 +53,6 @@ git clone https://github.com/jalopezsuarez/coder-agent.git
 ```
 ```bash
 cp coder-agent/src/{CODER.md,AGENTS.md,GEMINI.md} .
-cp -r coder-agent/.claude .
 ```
 
 ### 2. Launch your CLI
@@ -288,7 +287,6 @@ The agent brain lives in `CODER.md`. Bridge files (`AGENTS.md`, `GEMINI.md`) tel
 ├── README.md                                   # Project overview (this file)
 ├── CLAUDE.md                                   # Instructions for Claude Code
 ├── coder-agent.png                             # Project banner
-├── .claude/                                    # Claude Code settings
 └── src/                                        # Source files (copy to your project)
     ├── CODER.md                                # Agent brain (source of truth)
     ├── AGENTS.md                               # Bridge: Claude Code / Codex CLI
