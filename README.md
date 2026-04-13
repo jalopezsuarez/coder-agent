@@ -155,14 +155,14 @@ Coder auto-creates the full `coder-factory/` structure and indexes your project 
 
 ## ⚡ Commands
 
-All commands require the **"Coder"** prefix to activate the agent.
+All commands require the **"Coder"** prefix to activate the agent. Coder can only work on stories tagged `#coder` — stories without it are human-owned. Stories tagged `#blocked` are always skipped.
 
 | Command | Description |
 |---------|-------------|
 | `Coder create task <desc>` | Create a story in BACKLOG with note |
 | `Coder create task urgent <desc>` | Same, with `#urgent` tag |
-| `Coder plan` | Plan all stories in PLAN column |
-| `Coder execute` | Implement all stories in EXECUTION column |
+| `Coder plan` | Plan eligible stories in PLAN column |
+| `Coder execute` | Implement eligible stories in EXECUTION column |
 | `Coder move S001 to PLAN` | Move story between columns |
 | `Coder add to S001 <text>` | Append text to story's USER PROMPT |
 | `Coder status` | Show board summary |
@@ -174,13 +174,13 @@ All commands require the **"Coder"** prefix to activate the agent.
 
 | Tag | Effect |
 |-----|--------|
-| `#coder` | Story assigned to the agent |
-| `#urgent` | Processed first |
-| `#blocked` | Agent will not touch it |
+| `#coder` | **Required** — Story assigned to the agent. Without this tag, Coder cannot plan, execute, move, or modify the story |
+| `#urgent` | Processed first within eligible stories |
+| `#blocked` | Coder skips it entirely — overrides `#coder` until removed |
 
 ### Smart Bug Detection
 
-When you report an issue, Coder tries to match it to an existing story:
+When you report an issue, Coder tries to match it to an existing story (only those with `#coder` and without `#blocked`):
 
 ```
 > Coder the sidebar doesn't collapse on mobile
@@ -189,7 +189,7 @@ Human, this looks like a bug on S025 "Implement sidebar navigation".
 Should I add a BUG FIX entry there?
 ```
 
-If it can't identify the story, it asks. If it's clearly new, it suggests creating a story. **Nothing goes untracked.**
+If the matched story is missing `#coder` or has `#blocked`, Coder informs you it cannot work on it. If it can't identify the story, it asks. If it's clearly new, it suggests creating a story. **Nothing goes untracked.**
 
 ---
 
@@ -338,12 +338,24 @@ The server starts at `http://localhost:8089`.
 
 **Board & Cards:**
 - GitHub-dark themed Kanban board with all 6 color-coded columns (BACKLOG, PLAN, REVIEW, EXECUTION, TESTING, DONE)
-- Cards display title, content preview, created/updated dates, story ID badge, and color-coded tags (#coder, #urgent, #blocked)
+- Cards display inline story ID badge (blue/white), title, content preview, short date (d/m/yy HH:MM), and color-coded tags (#coder, #urgent, #blocked)
 - Drag & drop cards between columns — auto-saves board and updates story status and timestamp
+
+**Live Reload (SSE):**
+- File watcher thread monitors `coder-board.md` and `coder-notes/` via `mtime` (zero polling, zero disk reads when idle)
+- Server-Sent Events push changes to the browser — board updates automatically within ~1 second
+- Single persistent connection with automatic reconnection — no repeated HTTP requests
+
+**Search & Filter:**
+- Real-time search input in the toolbar — filters cards as you type
+- Accent and case insensitive (e.g., "informacion" matches "Información")
+- Keyboard shortcut: press `/` to focus the search box
+- Column counts update to reflect visible cards
 
 **Story Sidebar:**
 - Click any card to open a sidebar with the full story note
 - Three view modes: **Edit** (WYSIWYG), **Source** (raw Markdown), and **View** (read-only rendered)
+- Tag toggle buttons (`#coder`, `#urgent`, `#blocked`) — click to toggle, persisted on save
 - Save changes with Ctrl+S / Cmd+S — scroll position preserved between mode switches
 
 **Built-in Markdown Renderer:**
@@ -353,9 +365,10 @@ The server starts at `http://localhost:8089`.
 
 **Extras:**
 - Help modal with all Coder commands, workflow visualization, and tag reference
-- REST API (`/api/board`, `/api/note`) for reading and saving board state and notes
+- REST API (`/api/board`, `/api/note`, `/api/events`) for board state, notes, and live events
+- `ThreadingHTTPServer` for concurrent SSE streams and HTTP requests
 - Responsive layout — sidebar goes full-width on mobile
-- Keyboard shortcuts: Escape to close, Ctrl+S / Cmd+S to save
+- Keyboard shortcuts: Escape to close, Ctrl+S / Cmd+S to save, `/` to search
 - Obsidian Kanban plugin compatible — preserves board settings
 
 ---
