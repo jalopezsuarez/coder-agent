@@ -330,9 +330,14 @@ At runtime, Coder auto-generates the `coder-factory/` structure in your project:
 
 A self-contained Kanban board manager at `coder-factory/kanban.py`. Zero external dependencies — pure Python 3.
 
+**Basic start**
 ```bash
-cd coder-factory
 python3 kanban.py
+```
+
+**Advanced start** *(kill existing process + restart in background)*
+```bash
+pkill -f "kanban.py"; sleep 1 && nohup python3 kanban.py 2>&1 &
 ```
 
 The server starts at `http://localhost:8089`.
