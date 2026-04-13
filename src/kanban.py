@@ -306,8 +306,8 @@ body{font-family:var(--font);font-size:14px;color:var(--text);background:var(--b
 /* GitHub Markdown */
 .md{font-family:var(--font);font-size:14px;line-height:1.5;word-wrap:break-word;color:var(--text)}
 .md h1{font-size:2em;font-weight:600;padding-bottom:.3em;border-bottom:1px solid var(--border);margin:24px 0 16px}
-.md h2{font-size:1.5em;font-weight:600;padding-bottom:.3em;border-bottom:1px solid var(--border);margin:24px 0 16px;color:#91c4ec}
-.md h3{font-size:1.25em;font-weight:600;margin:24px 0 16px;color:#d898d8}
+.md h2{font-size:1.5em;font-weight:600;padding-bottom:.3em;border-bottom:1px solid var(--border);margin:24px 0 16px;color:#fff}
+.md h3{font-size:1.25em;font-weight:600;margin:24px 0 16px;color:#fcfe58}
 .md h4{font-size:1em;font-weight:600;margin:24px 0 16px;color:#e59746}
 .md h5{font-size:.875em;font-weight:600;margin:24px 0 16px}
 .md h6{font-size:.85em;font-weight:600;color:var(--text3);margin:24px 0 16px}
