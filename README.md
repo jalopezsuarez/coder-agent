@@ -43,16 +43,15 @@ Coder is an **agent instruction set** that turns any LLM CLI into a disciplined 
 
 ---
 
-## 🚀 Quick Start
+## 🚀 Quick Start – run inside your project directory
 
-### 1. Clone and copy
+### 1. Clone and copy (from your project directory)
 
 ```bash
-cd /path/to/your/project/
 git clone https://github.com/jalopezsuarez/coder-agent.git
 ```
 
-### 2. Launch your CLI
+### 2. Launch your CLI (from your project directory)
 
 ```bash
 claude    # or gemini / codex
@@ -82,17 +81,17 @@ Coder auto-creates the full `coder-factory/` structure and indexes your project 
 
 ### Recommendations
 
+- **Add `coder-agent` to your `.gitignore`** — The cloned repository and all generated artifacts should not be committed to your project.
+
+  ```bash
+  echo "coder-agent" >> .gitignore
+  ```
+
 - **Use the `coder-agent` folder as the `coder-factory` path** — When Coder asks for the factory path, point it to the same `coder-agent` directory. This keeps all Coder artifacts (`coder-factory/`, notes, board, memory) contained inside the gitignored folder, keeping your project tree clean.
 
   ```
   Human, where should I create or find coder-factory?
   > ./coder-agent
-  ```
-
-- **Add `coder-agent` to your `.gitignore`** — The cloned repository and all generated artifacts should not be committed to your project.
-
-  ```bash
-  echo "coder-agent" >> /path/to/your/project/.gitignore
   ```
 
 ---
@@ -107,7 +106,7 @@ Coder auto-creates the full `coder-factory/` structure and indexes your project 
   │                              │──── create note ───────────> │
   │                              │──── add to BACKLOG ────────> │
   │                              │                              │
-  │  move task to PLAN          │                              │
+  │  move task to PLAN           │                              │
   │                              │                              │
   │  "Coder plan"                │                              │
   │─────────────────────────────>│                              │
@@ -197,7 +196,7 @@ Every task gets a dedicated note in `coder-notes/` with this structure:
 
 ```
 ┌──────────────────────────────────┐
-│ # C1 Implement user auth       │
+│ # C1 Implement user auth         │
 │ > Status | Created | Updated     │
 ├──────────────────────────────────┤
 │ USER PROMPT          ← Human     │  You write here. Coder processes
