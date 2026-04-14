@@ -202,7 +202,7 @@ When human says: `Coder move C1 to PLAN` or `Coder move task 1 to planning`
 
 Every note in `coder-notes/` follows this structure:
 
-```markdown
+````markdown
 # C<N> Task Title
 
 > Status: BACKLOG | PLAN | REVIEW | EXECUTION | TESTING | DONE
@@ -227,8 +227,10 @@ Every note in `coder-notes/` follows this structure:
 
 ### HUMAN-ONLY ZONE
 
+```
 Write your instructions here.
 Coder will process this into INSTRUCTIONS and clear it on next state change.
+```
 
 ---
 
@@ -247,7 +249,7 @@ Coder will process this into INSTRUCTIONS and clear it on next state change.
 ## FIXES
 
 <!-- 🤖 CODER-ONLY — Versioned fixes reports -->
-```
+````
 
 ### Iteration Placement Rules
 
@@ -299,12 +301,14 @@ Iterations are numbered sequentially: #1, #2, #3... Never skip a number. The hig
    a. Read the content.
    b. Create `INSTRUCTIONS #(N+1) — YYYY-MM-DD HH:MM` with the processed content.
    c. **Restore HUMAN-ONLY ZONE** — clear the human's text and restore the permanent placeholder:
-      ```
+      ````
       ### HUMAN-ONLY ZONE
 
+      ```
       Write your instructions here.
       Coder will process this into INSTRUCTIONS and clear it on next state change.
       ```
+      ````
    d. Update SUMMARY and TABLE OF CONTENTS.
 2. HUMAN-ONLY ZONE must show only the placeholder after every state change.
 3. HUMAN-ONLY ZONE can be filled:

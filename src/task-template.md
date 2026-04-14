@@ -22,8 +22,10 @@
 
 ### HUMAN-ONLY ZONE
 
+```
 Write your instructions here.
 Coder will process this into INSTRUCTIONS and clear it on next state change.
+```
 
 ---
 
