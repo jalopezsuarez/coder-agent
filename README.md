@@ -165,11 +165,11 @@ The service starts at `http://localhost:8089`.
   │                              │                              │
   │  "Coder plan"                │                              │
   │─────────────────────────────>│                              │
-  │                              │──── process USER PROMPT ───> │
+  │                              │──── process HUMAN-ONLY ────> │
   │                              │──── write PLANNING #1 ─────> │
   │                              │──── move to REVIEW ────────> │
   │                              │                              │
-  │  review + write USER PROMPT  │                              │
+  │  review + write HUMAN-ONLY   │                              │
   │  move to PLAN                │                              │
   │                              │                              │
   │  "Coder plan"                │                              │
@@ -188,8 +188,8 @@ The service starts at `http://localhost:8089`.
   │                              │                              │
   │  "sidebar doesn't collapse"  │                              │
   │─────────────────────────────>│                              │
-  │                              │──── identify task ────────> │
-  │                              │──── BUG FIX #1 ────────────> │
+  │                              │──── identify task ─────────> │
+  │                              │──── FIXES #1 ──────────────> │
   │                              │                              │
   │  validate → DONE             │                              │
 ```
@@ -217,7 +217,7 @@ All commands **require** the word **"Coder"** (or **"coder"**) in your message t
 | `Coder plan` | Plan eligible tasks in PLAN column |
 | `Coder execute` | Implement eligible tasks in EXECUTION column |
 | `Coder move C1 to PLAN` | Move task between columns |
-| `Coder add to C1 <text>` | Append text to task's USER PROMPT |
+| `Coder add to C1 <text>` | Append text to task's HUMAN-ONLY ZONE |
 | `Coder status` | Show board summary |
 | `Coder update memory` | Re-index project knowledge base |
 | `Coder for C5 <instruction>` | Add instruction to specific task |
@@ -238,7 +238,7 @@ When you report an issue, Coder tries to match it to an existing task (only thos
 > Coder the sidebar doesn't collapse on mobile
 
 Human, this looks like a bug on C25 "Implement sidebar navigation".
-Should I add a BUG FIX entry there?
+Should I add a FIXES entry there?
 ```
 
 If the matched task is missing `#coder` or has `#canceled`, Coder informs you it cannot work on it. If it can't identify the task, it asks. If it's clearly new, it suggests creating a task. **Nothing goes untracked.**
@@ -254,34 +254,41 @@ Every task gets a dedicated note in `coder-notes/` with this structure:
 │ # C1 Implement user auth         │
 │ > Status | Created | Updated     │
 ├──────────────────────────────────┤
-│ USER PROMPT          ← Human     │  You write here. Coder processes
-│                      writes      │  it and clears it on state change.
+│ SUMMARY              ← Coder     │  Last action snapshot (overwritten).
 ├──────────────────────────────────┤
 │ TABLE OF CONTENTS    ← Auto      │  Clickable navigation index.
 ├──────────────────────────────────┤
-│ INSTRUCTIONS #1..N   ← Processed │  Processed from USER PROMPT.
+│ INSTRUCTIONS         ← Human     │  HUMAN-ONLY ZONE + processed
+│   HUMAN-ONLY ZONE   ← writes     │  iterations. You write here,
+│   INSTRUCTIONS #1..N ← Processed │  Coder processes and restores.
 ├──────────────────────────────────┤
 │ PLANNING #1..N       ← Coder     │  Versioned plans.
 ├──────────────────────────────────┤
 │ EXECUTION #1..N      ← Coder     │  Versioned implementations.
 ├──────────────────────────────────┤
-│ BUG FIX #1..N        ← Coder     │  Versioned bug fixes.
+│ FIXES #1..N          ← Coder     │  Versioned fixes.
 └──────────────────────────────────┘
 ```
 
-### USER PROMPT Flow
+### SUMMARY
 
-1. Human writes in USER PROMPT (manually or via `Coder for C5 ...`).
+The `SUMMARY` section always reflects the **last action** performed on the task. After every iteration (INSTRUCTIONS, PLANNING, EXECUTION, or FIXES), Coder **overwrites** SUMMARY with a matching entry: `SUMMARY PLANNING #1 — 2026-04-13 22:50` + brief description. This gives an instant snapshot of where the task stands.
+
+### HUMAN-ONLY ZONE Flow
+
+1. Human writes in HUMAN-ONLY ZONE inside INSTRUCTIONS (manually or via `Coder for C5 ...`).
 2. On next state change, Coder processes it into `INSTRUCTIONS #(N+1)`.
-3. USER PROMPT is cleared.
-4. Table of contents is updated.
+3. HUMAN-ONLY ZONE is cleared and the placeholder is restored.
+4. SUMMARY and TABLE OF CONTENTS are updated.
 
 ### Key Design Decisions
 
 - **Filenames match titles** — `C1 Implement user authentication.md` links directly from the Kanban board via `[[C1 Implement user authentication]]`.
 - **Titles are clean** — No symbols, no tech dumps. Just a clear summary: "Implement user authentication", not "JS+JWT+Fastify auth module".
 - **Tasks use C<N> IDs** — simple incremental numbering (C1, C2, C3...) for clear tracking.
-- **All sections are append-only** — PLANNING #1 is never modified; #2 is appended with the delta.
+- **Strict section containment** — Each iteration type goes ONLY in its matching section (INSTRUCTIONS under `## INSTRUCTIONS`, PLANNING under `## PLANNING`, etc.). Never mixed.
+- **Newest first** — Iterations within each section are ordered most recent at the top, oldest at the bottom (#3, #2, #1).
+- **Notes are incremental** — PLANNING #1 is never modified; #2 is added above it. All content preserved in full.
 
 ---
 

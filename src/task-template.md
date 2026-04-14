@@ -6,12 +6,9 @@
 
 ---
 
-## USER PROMPT
+## SUMMARY
 
-<!-- 
-  ✏️ HUMAN-ONLY — Write your instructions here.
-  Coder will process this into INSTRUCTIONS and clear it on next state change.
--->
+<!-- Auto-maintained by Coder — last action summary -->
 
 ---
 
@@ -23,7 +20,10 @@
 
 ## INSTRUCTIONS
 
-<!-- Processed from USER PROMPT by Coder. -->
+### HUMAN-ONLY ZONE
+
+Write your instructions here.
+Coder will process this into INSTRUCTIONS and clear it on next state change.
 
 ---
 
@@ -39,6 +39,6 @@
 
 ---
 
-## BUG FIX
+## FIXES
 
-<!-- 🤖 CODER-ONLY — Versioned bug fix reports -->
+<!-- 🤖 CODER-ONLY — Versioned fixes reports -->

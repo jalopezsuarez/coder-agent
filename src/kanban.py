@@ -41,7 +41,7 @@ def extract_preview(txt):
     lines = txt.split("\n")
     last, best_date = -1, ""
     for i, l in enumerate(lines):
-        m = re.match(r"###\s+(?:INSTRUCTIONS|PLANNING|EXECUTION|BUG FIX)\s+#\d+\s*—\s*(.+)", l)
+        m = re.match(r"###\s+(?:SUMMARY\s+)?(?:INSTRUCTIONS|PLANNING|EXECUTION|FIXES)\s+#\d+\s*—\s*(.+)", l)
         if m:
             date = m.group(1).strip()
             if date >= best_date:
@@ -386,7 +386,7 @@ body{font-family:var(--font);font-size:14px;color:var(--text);background:var(--b
         <div class="help-row"><code>Coder plan</code><span>Plan tasks in PLAN column</span></div>
         <div class="help-row"><code>Coder execute</code><span>Implement tasks in EXECUTION</span></div>
         <div class="help-row"><code>Coder move C1 to PLAN</code><span>Move task between columns</span></div>
-        <div class="help-row"><code>Coder add to C1 &lt;text&gt;</code><span>Append to USER PROMPT</span></div>
+        <div class="help-row"><code>Coder add to C1 &lt;text&gt;</code><span>Append to HUMAN-ONLY ZONE</span></div>
         <div class="help-row"><code>Coder for C1 &lt;instr&gt;</code><span>Add instruction directly</span></div>
         <div class="help-row"><code>Coder status</code><span>Board summary</span></div>
         <div class="help-row"><code>Coder update memory</code><span>Re-index knowledge base</span></div>
@@ -829,7 +829,7 @@ function renderMd(txt){
     if(/^(\s*[-*_]\s*){3,}$/.test(l.trim())){fl();html+='<hr>';continue;}
     var hm=l.match(/^(#{1,6})\s+(.+)/);
     if(hm){fl();var raw=hm[2],aid;
-      var im=raw.match(/^(INSTRUCTIONS|PLANNING|EXECUTION|BUG FIX)\s+#(\d+)/);
+      var im=raw.match(/^(?:SUMMARY\s+)?(INSTRUCTIONS|PLANNING|EXECUTION|FIXES)\s+#(\d+)/);
       if(im) aid=im[1].toLowerCase().replace(/\s+/g,'-')+'-'+im[2];
       else aid=raw.replace(/[\u2014\u2013]/g,'').replace(/[^\w\s-]/g,'').trim().toLowerCase().replace(/\s+/g,'-');
       html+='<h'+hm[1].length+' id="'+esc(aid)+'">'+il(raw)+'</h'+hm[1].length+'>';continue;}
