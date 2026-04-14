@@ -276,9 +276,15 @@ The `SUMMARY` section always reflects the **last action** performed on the task.
 
 ### HUMAN-ONLY ZONE Flow
 
-1. Human writes in HUMAN-ONLY ZONE inside INSTRUCTIONS (manually or via `Coder for C5 ...`).
+1. Human writes in HUMAN-ONLY ZONE inside INSTRUCTIONS — replacing the placeholder code block (manually or via `Coder for C5 ...`).
 2. On next state change, Coder processes it into `INSTRUCTIONS #(N+1)`.
-3. HUMAN-ONLY ZONE is cleared and the placeholder is restored.
+3. HUMAN-ONLY ZONE is cleared and the placeholder code block is restored:
+   ````
+   ```
+   Write your instructions here.
+   Coder will process this into INSTRUCTIONS and clear it on next state change.
+   ```
+   ````
 4. SUMMARY and TABLE OF CONTENTS are updated.
 
 ### Key Design Decisions
