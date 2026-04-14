@@ -442,20 +442,20 @@ Maintained at the top of each note, auto-updated by Coder. Uses indented list wi
 ## TABLE OF CONTENTS
 
 - INSTRUCTIONS
-  - [INSTRUCTIONS #2 — 2026-04-13 15:00](#instructions-2)
-  - [INSTRUCTIONS #1 — 2026-04-13 12:34](#instructions-1)
+  - [INSTRUCTIONS #2 — 2026-04-13 15:00](#instructions-2--2026-04-13-1500)
+  - [INSTRUCTIONS #1 — 2026-04-13 12:34](#instructions-1--2026-04-13-1234)
 - PLANNING
-  - [PLANNING #2 — 2026-04-13 16:00](#planning-2)
-  - [PLANNING #1 — 2026-04-13 13:00](#planning-1)
+  - [PLANNING #2 — 2026-04-13 16:00](#planning-2--2026-04-13-1600)
+  - [PLANNING #1 — 2026-04-13 13:00](#planning-1--2026-04-13-1300)
 - EXECUTION
-  - [EXECUTION #1 — 2026-04-14 09:00](#execution-1)
+  - [EXECUTION #1 — 2026-04-14 09:00](#execution-1--2026-04-14-0900)
 - FIXES
-  - [FIXES #1 — 2026-04-14 11:30](#fixes-1)
+  - [FIXES #1 — 2026-04-14 11:30](#fixes-1--2026-04-14-1130)
 ```
 
 **TOC ordering:** Mirrors the document order — newest first within each group.
 
-Anchor IDs follow the pattern: section name lowercase, spaces replaced with `-`, e.g. `#instructions-1`, `#planning-2`, `#fixes-1`.
+Anchor IDs are generated from the full heading text: lowercase, remove `#` `—` `:` and special characters, spaces replaced with `-`. Example: heading `### PLANNING #1 — 2026-04-14 13:00` → anchor `#planning-1--2026-04-14-1300`.
 
 ---
 
