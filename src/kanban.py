@@ -452,7 +452,7 @@ body{font-family:var(--font);font-size:14px;color:var(--text);background:var(--b
   <div class="side-body" id="sBody">
     <div id="sContent"></div>
     <details class="side-danger" id="sDanger" style="display:none">
-      <summary>Danger zone</summary>
+      <summary>▶ Danger zone</summary>
       <p>This action is irreversible. The task will be removed from the board and its note file permanently deleted.</p>
       <button class="btn-danger" id="btn-delete">Delete task</button>
     </details>
