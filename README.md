@@ -117,7 +117,7 @@ The service starts at `http://localhost:8089`.
 
 **Board & Cards:**
 - GitHub-dark themed Kanban board with all 6 color-coded columns (BACKLOG, PLAN, REVIEW, EXECUTION, TESTING, DONE)
-- Cards display inline task ID badge (blue/white), title, SUMMARY preview (from the task's `## SUMMARY` section), short date (d/m/yy HH:MM), and color-coded tags (#coder, #canceled)
+- Cards display inline task ID badge (blue/white), title, summary, short date (d/m/yy HH:MM), and color-coded tags (#coder, #canceled)
 - Drag & drop cards between columns — auto-saves board and updates task status and timestamp
 
 **Live Reload (SSE):**
