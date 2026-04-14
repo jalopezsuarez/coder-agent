@@ -444,18 +444,18 @@ Maintained at the top of each note, auto-updated by Coder. Uses indented list wi
 ## TABLE OF CONTENTS
 
 - INSTRUCTIONS
-  - [INSTRUCTIONS #2](#instructions-2)
-  - [INSTRUCTIONS #1](#instructions-1)
+  - [INSTRUCTIONS #2](#instructions-2) · 2026-04-14 15:30
+  - [INSTRUCTIONS #1](#instructions-1) · 2026-04-14 12:15
 - PLANNING
-  - [PLANNING #2](#planning-2)
-  - [PLANNING #1](#planning-1)
+  - [PLANNING #2](#planning-2) · 2026-04-14 16:00
+  - [PLANNING #1](#planning-1) · 2026-04-14 13:45
 - EXECUTION
-  - [EXECUTION #1](#execution-1)
+  - [EXECUTION #1](#execution-1) · 2026-04-14 17:00
 - FIXES
-  - [FIXES #1](#fixes-1)
+  - [FIXES #1](#fixes-1) · 2026-04-14 18:30
 ```
 
-**TOC ordering:** Mirrors the document order — newest first within each group.
+**TOC ordering:** Mirrors the document order — newest first within each group. Each entry includes the `> Created:` date of that iteration, separated by `·`.
 
 Anchor IDs match the heading text: section name lowercase, spaces replaced with `-`, `#` removed. Example: `### PLANNING #1` → `#planning-1`.
 
