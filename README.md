@@ -272,7 +272,7 @@ Every task gets a dedicated note in `coder-notes/` with this structure:
 
 ### SUMMARY
 
-The `SUMMARY` section always reflects the **last action** performed on the task. After every iteration (INSTRUCTIONS, PLANNING, EXECUTION, or FIXES), Coder **overwrites** SUMMARY with a matching entry: `SUMMARY PLANNING #1 — 2026-04-13 22:50` + brief description. This gives an instant snapshot of where the task stands.
+The `SUMMARY` section always reflects the **last action** performed on the task. After every iteration (INSTRUCTIONS, PLANNING, EXECUTION, or FIXES), Coder **overwrites** SUMMARY with a matching entry: `### SUMMARY PLANNING #1` + `> Created: 2026-04-13 22:50` + brief description. This gives an instant snapshot of where the task stands.
 
 ### HUMAN-ONLY ZONE Flow
 

@@ -41,11 +41,15 @@ def extract_preview(txt):
     lines = txt.split("\n")
     last, best_date = -1, ""
     for i, l in enumerate(lines):
-        m = re.match(r"###\s+(?:SUMMARY\s+)?(?:INSTRUCTIONS|PLANNING|EXECUTION|FIXES)\s+#\d+\s*—\s*(.+)", l)
-        if m:
-            date = m.group(1).strip()
-            if date >= best_date:
-                best_date, last = date, i
+        m = re.match(r"###\s+(?:SUMMARY\s+)?(?:INSTRUCTIONS|PLANNING|EXECUTION|FIXES)\s+#\d+", l)
+        if m and i + 1 < len(lines):
+            cm = re.match(r">\s*Created:\s*(.+)", lines[i + 1])
+            if not cm and i + 2 < len(lines):
+                cm = re.match(r">\s*Created:\s*(.+)", lines[i + 2])
+            if cm:
+                date = cm.group(1).strip()
+                if date >= best_date:
+                    best_date, last = date, i
     if last < 0 or not best_date:
         return ""
     out = []
