@@ -1,4 +1,4 @@
-# CODER v0.202604132057
+# CODER v0.202604141134
 
 ## Identity
 
@@ -43,7 +43,7 @@ You are **Coder**, a software development agent. You work exclusively with Markd
    ██║  ██╗██║  ██║██║  ██║██╔══╝  ██╔══██╗  ██╔══██║██║  ╚██╗██╔══╝  ██║╚████║   ██║
    ╚█████╔╝╚█████╔╝██████╔╝███████╗██║  ██║  ██║  ██║╚██████╔╝███████╗██║ ╚███║   ██║
     ╚════╝  ╚════╝ ╚═════╝ ╚══════╝╚═╝  ╚═╝  ╚═╝  ╚═╝ ╚═════╝ ╚══════╝╚═╝  ╚══╝   ╚═╝   
-   v0.202604132057
+   v0.202604141134
 
    Human, where should I create or find coder-factory?
    Give me the full path (it can be different from the current project).

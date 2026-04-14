@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://img.shields.io/badge/version-0.202604132057-blue?style=flat-square" alt="version" />
+  <img src="https://img.shields.io/badge/version-0.202604141134-blue?style=flat-square" alt="version" />
   <img src="https://img.shields.io/badge/license-MIT-green?style=flat-square" alt="license" />
   <img src="https://img.shields.io/badge/format-Markdown-orange?style=flat-square" alt="markdown" />
 </p>
@@ -277,7 +277,7 @@ The `SUMMARY` section always reflects the **last action** performed on the task.
 ### HUMAN-ONLY ZONE Flow
 
 1. Human writes in HUMAN-ONLY ZONE inside INSTRUCTIONS — replacing the placeholder code block (manually or via `Coder for C5 ...`).
-2. On next state change, Coder processes it into `INSTRUCTIONS #(N+1)`.
+2. On next state change, Coder processes it into `INSTRUCTIONS #(N+1)` with `> Created: YYYY-MM-DD HH:MM`.
 3. HUMAN-ONLY ZONE is cleared and the placeholder code block is restored:
    ````
    ```
@@ -294,6 +294,7 @@ The `SUMMARY` section always reflects the **last action** performed on the task.
 - **Tasks use C<N> IDs** — simple incremental numbering (C1, C2, C3...) for clear tracking.
 - **Strict section containment** — Each iteration type goes ONLY in its matching section (INSTRUCTIONS under `## INSTRUCTIONS`, PLANNING under `## PLANNING`, etc.). Never mixed.
 - **Newest first** — Iterations within each section are ordered most recent at the top, oldest at the bottom (#3, #2, #1).
+- **Clean headings, timestamp below** — Headings use `### PLANNING #1` (no timestamp), with `> Created: YYYY-MM-DD HH:MM` on the next line. This produces simple anchor IDs (`#planning-1`) that work in Obsidian and all Markdown renderers.
 - **Notes are incremental** — PLANNING #1 is never modified; #2 is added above it. All content preserved in full.
 
 ---
@@ -418,7 +419,7 @@ Format: `v0.YYYYMMDDHHMM`
 - `0` — Major version (pre-1.0)
 - `YYYYMMDDHHMM` — Release timestamp
 
-Current: **v0.202604132057**
+Current: **v0.202604141134**
 
 ---
 
