@@ -15,5 +15,5 @@ kanban-plugin: board
 ## DONE
 
 %% kanban:settings
-{"kanban-plugin":"board","new-note-folder":"coder-notes"}
+{"kanban-plugin":"board","new-note-folder":"coder-tasks"}
 %%

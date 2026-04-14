@@ -6,7 +6,7 @@ from datetime import datetime
 PORT = 8089
 BASE = os.path.dirname(os.path.abspath(__file__))
 BOARD = os.path.join(BASE, "coder-board", "coder-board.md")
-NOTES = os.path.join(BASE, "coder-notes")
+NOTES = os.path.join(BASE, "coder-tasks")
 
 _change = threading.Event()
 _last_mtime = {"board": 0.0, "notes": 0.0}
@@ -39,28 +39,23 @@ def _watcher():
 
 def extract_preview(txt):
     lines = txt.split("\n")
-    last, best_date = -1, ""
-    for i, l in enumerate(lines):
-        m = re.match(r"###\s+(?:SUMMARY\s+)?(?:INSTRUCTIONS|PLANNING|EXECUTION|FIXES)\s+#\d+", l)
-        if m and i + 1 < len(lines):
-            cm = re.match(r">\s*Created:\s*(.+)", lines[i + 1])
-            if not cm and i + 2 < len(lines):
-                cm = re.match(r">\s*Created:\s*(.+)", lines[i + 2])
-            if cm:
-                date = cm.group(1).strip()
-                if date >= best_date:
-                    best_date, last = date, i
-    if last < 0 or not best_date:
-        return ""
+    in_summary = False
+    found_header = False
     out = []
-    for l in lines[last + 1:]:
-        if re.match(r"###\s+", l):
+    for l in lines:
+        if re.match(r"^##\s+SUMMARY\s*$", l):
+            in_summary = True
+            continue
+        if in_summary and re.match(r"^##\s+", l):
             break
+        if not in_summary:
+            continue
+        if re.match(r"^###\s+SUMMARY\s+-\s+", l):
+            found_header = True
+            continue
+        if not found_header:
+            continue
         if re.match(r"^---|^<!--", l.strip()):
-            continue
-        if re.match(r"^>\s*Created:\s*", l):
-            continue
-        if re.match(r"^#{1,4}\s+", l):
             continue
         if not l.strip():
             continue
@@ -122,7 +117,7 @@ def save_board(cols):
             lines.append(entry)
         lines.append("")
     lines.append("%% kanban:settings")
-    lines.append('{"kanban-plugin":"board","new-note-folder":"coder-notes"}')
+    lines.append('{"kanban-plugin":"board","new-note-folder":"coder-tasks"}')
     lines.append("%%")
     with open(BOARD, "w", encoding="utf-8") as f:
         f.write("\n".join(lines) + "\n")
@@ -834,7 +829,7 @@ function renderMd(txt){
     if(/^(\s*[-*_]\s*){3,}$/.test(l.trim())){fl();html+='<hr>';continue;}
     var hm=l.match(/^(#{1,6})\s+(.+)/);
     if(hm){fl();var raw=hm[2],aid;
-      var im=raw.match(/^(?:SUMMARY\s+)?(INSTRUCTIONS|PLANNING|EXECUTION|FIXES)\s+#(\d+)/);
+      var im=raw.match(/^(?:SUMMARY\s+-\s+)?(INSTRUCTIONS|PLANNING|EXECUTION|FIXES)\s+#(\d+)/);
       if(im) aid=im[1].toLowerCase().replace(/\s+/g,'-')+'-'+im[2];
       else aid=raw.replace(/[\u2014\u2013]/g,'').replace(/[^\w\s-]/g,'').trim().toLowerCase().replace(/\s+/g,'-');
       html+='<h'+hm[1].length+' id="'+esc(aid)+'">'+il(raw)+'</h'+hm[1].length+'>';continue;}

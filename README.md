@@ -117,11 +117,11 @@ The service starts at `http://localhost:8089`.
 
 **Board & Cards:**
 - GitHub-dark themed Kanban board with all 6 color-coded columns (BACKLOG, PLAN, REVIEW, EXECUTION, TESTING, DONE)
-- Cards display inline task ID badge (blue/white), title, content preview, short date (d/m/yy HH:MM), and color-coded tags (#coder, #canceled)
+- Cards display inline task ID badge (blue/white), title, SUMMARY preview (from the task's `## SUMMARY` section), short date (d/m/yy HH:MM), and color-coded tags (#coder, #canceled)
 - Drag & drop cards between columns — auto-saves board and updates task status and timestamp
 
 **Live Reload (SSE):**
-- File watcher thread monitors `coder-board.md` and `coder-notes/` via `mtime` (zero polling, zero disk reads when idle)
+- File watcher thread monitors `coder-board.md` and `coder-tasks/` via `mtime` (zero polling, zero disk reads when idle)
 - Server-Sent Events push changes to the browser — board updates automatically within ~1 second
 - Single persistent connection with automatic reconnection — no repeated HTTP requests
 
@@ -246,7 +246,7 @@ If the matched task is missing `#coder` or has `#canceled`, Coder informs you it
 
 ## 📝 Task Notes
 
-Every task gets a dedicated note in `coder-notes/` with this structure:
+Every task gets a dedicated note in `coder-tasks/` with this structure:
 
 ```
 ┌──────────────────────────────────┐
@@ -271,7 +271,7 @@ Every task gets a dedicated note in `coder-notes/` with this structure:
 
 ### SUMMARY
 
-The `SUMMARY` section always reflects the **last action** performed on the task. After every iteration (INSTRUCTIONS, PLANNING, EXECUTION, or FIXES), Coder **overwrites** SUMMARY with a matching entry: `### SUMMARY PLANNING #1` + `> Created: 2026-04-13 22:50` + brief description. This gives an instant snapshot of where the task stands.
+The `SUMMARY` section always reflects the **last action** performed on the task. After every iteration (INSTRUCTIONS, PLANNING, EXECUTION, or FIXES), Coder **overwrites** SUMMARY with a matching entry: `### SUMMARY - PLANNING #1` + brief description. This gives an instant snapshot of where the task stands.
 
 ### HUMAN-ONLY ZONE Flow
 
@@ -384,7 +384,7 @@ At runtime, Coder auto-generates the `coder-factory/` structure in your project:
 │   └── knowledge-graph.md                      # Symbol graph & call chains
 ├── coder-board/
 │   └── coder-board.md                          # Kanban board
-└── coder-notes/                                # Task notes (auto-created)
+└── coder-tasks/                                # Task notes (auto-created)
 ```
 
 ---
@@ -401,11 +401,11 @@ The board uses the [Obsidian Kanban plugin](https://github.com/mgmeyers/obsidian
 
 ### Settings
 
-The board includes Kanban settings that auto-create new notes in the `coder-notes/` folder:
+The board includes Kanban settings that auto-create new notes in the `coder-tasks/` folder:
 
 ```
 %% kanban:settings
-{"kanban-plugin":"board","new-note-folder":"coder-notes"}
+{"kanban-plugin":"board","new-note-folder":"coder-tasks"}
 %%
 ```
 

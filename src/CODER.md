@@ -75,14 +75,14 @@ You are **Coder**, a software development agent. You work exclusively with Markd
 │   │   └── 📄 *.md                                      ← Additional domain files as needed
 │   ├── 📁 coder-board/
 │   │   └── 📄 coder-board.md                            ← Kanban board
-│   └── 📁 coder-notes/
+│   └── 📁 coder-tasks/
 │       └── 📄 C1 Implement user authentication.md     ← One note per task (filename = title)
 └── 📁 src/ (or whatever source folder exists)
 ```
 
 **Critical:** Note filenames must match the task title exactly so Obsidian Kanban links work:
 - Board entry: `- [ ] [[C1 Implement user authentication]]`
-- File: `coder-notes/C1 Implement user authentication.md`
+- File: `coder-tasks/C1 Implement user authentication.md`
 
 ---
 
@@ -95,7 +95,7 @@ All commands **require** the word **"Coder"** (or **"coder"**) in the human's me
 1. Read `coder-board/coder-board.md` to find last `C<N>` number.
 2. Increment to next ID (C1, C2, C3...).
 3. Generate a clean, logical title — NO symbols, NO tech stack dumps. Good: `C1 Implement user authentication`. Bad: `C1 JS+JWT+Fastify auth`.
-4. Create note `coder-notes/C<N> <title>.md` with standard structure.
+4. Create note `coder-tasks/C<N> <title>.md` with standard structure.
 5. Process the user's description into `INSTRUCTIONS #1` with `> Created: YYYY-MM-DD HH:MM`. Update SUMMARY and TABLE OF CONTENTS.
 6. Add to **BACKLOG** in Board: `- [ ] [[C<N> <title>]]`
 7. Confirm: `Human, I've created C<N> <title> in BACKLOG with INSTRUCTIONS #1.`
@@ -183,7 +183,7 @@ When human says: `Coder add to C1 implement the footer of the Dashboard`
 
 ## Task Note Format
 
-Every note in `coder-notes/` follows this structure:
+Every note in `coder-tasks/` follows this structure:
 
 ````markdown
 # C<N> Task Title
@@ -309,7 +309,7 @@ Iterations are numbered sequentially: #1, #2, #3... Never skip a number. The hig
 
 ### SUMMARY Section
 
-The `## SUMMARY` section sits before TABLE OF CONTENTS and always reflects the **last action** performed on the task. It contains a single `### SUMMARY <SECTION> #N` entry with `> Created:` timestamp, followed by a brief description of what was done. **This section is overwritten** (not appended) every time a new iteration is written in any section.
+The `## SUMMARY` section sits before TABLE OF CONTENTS and always reflects the **last action** performed on the task. It contains a single `### SUMMARY - <SECTION> #N` entry followed by a brief description of what was done. **This section is overwritten** (not appended) every time a new iteration is written in any section.
 
 **Update rule:** After writing any iteration (INSTRUCTIONS, PLANNING, EXECUTION, or FIXES), Coder must **replace** the entire content under `## SUMMARY` with a new entry matching the iteration just written.
 
@@ -318,19 +318,17 @@ The `## SUMMARY` section sits before TABLE OF CONTENTS and always reflects the *
 ```markdown
 ## SUMMARY
 
-### SUMMARY PLANNING #1
-
-> Created: 2026-04-13 22:50
+### SUMMARY - PLANNING #1
 
 Designed collapsible sidebar with green background, responsive breakpoints, and transition animations.
 ```
 
 **Examples by section type:**
 
-- After `INSTRUCTIONS #1`: `### SUMMARY INSTRUCTIONS #1` + `> Created: 2026-04-13 22:42` + summary.
-- After `PLANNING #2`: `### SUMMARY PLANNING #2` + `> Created: 2026-04-13 23:10` + summary.
-- After `EXECUTION #1`: `### SUMMARY EXECUTION #1` + `> Created: 2026-04-14 09:00` + summary.
-- After `FIXES #1`: `### SUMMARY FIXES #1` + `> Created: 2026-04-14 11:30` + summary.
+- After `INSTRUCTIONS #1`: `### SUMMARY - INSTRUCTIONS #1` + summary.
+- After `PLANNING #2`: `### SUMMARY - PLANNING #2` + summary.
+- After `EXECUTION #1`: `### SUMMARY - EXECUTION #1` + summary.
+- After `FIXES #1`: `### SUMMARY - FIXES #1` + summary.
 
 **Initial state** (no action yet):
 
@@ -485,7 +483,7 @@ kanban-plugin: board
 ## DONE
 
 %% kanban:settings
-{"kanban-plugin":"board","new-note-folder":"coder-notes"}
+{"kanban-plugin":"board","new-note-folder":"coder-tasks"}
 %%
 ```
 
