@@ -293,7 +293,8 @@ body{font-family:var(--font);font-size:14px;color:var(--text);background:var(--b
 .side-body::-webkit-scrollbar{width:5px}
 .side-body::-webkit-scrollbar-track{background:transparent}
 .side-body::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
-.side-body textarea{width:100%;min-height:60vh;background:var(--bg);color:var(--text);border:none;padding:16px 32px;font-family:var(--mono);font-size:13px;resize:none;line-height:1.5;outline:none}
+.side-body .side-content{flex:1}
+.side-body textarea{width:100%;min-height:100%;background:var(--bg);color:var(--text);border:none;padding:16px 32px;font-family:var(--mono);font-size:13px;resize:none;line-height:1.5;outline:none}
 .btn-save{display:flex;align-items:center;justify-content:center;width:32px;height:32px;border:1px solid var(--border);border-radius:var(--radius);background:var(--btn);color:var(--text2);cursor:pointer;flex-shrink:0;transition:background .2s,border-color .2s,color .2s}
 .btn-save:hover{background:var(--btn-hover);color:var(--text);border-color:var(--text2)}
 .btn-save.ok{background:#238636;border-color:#2ea043;color:#fff}
@@ -450,7 +451,7 @@ body{font-family:var(--font);font-size:14px;color:var(--text);background:var(--b
     </div>
   </div>
   <div class="side-body" id="sBody">
-    <div id="sContent"></div>
+    <div class="side-content" id="sContent"></div>
     <details class="side-danger" id="sDanger" style="display:none">
       <summary>▶ Danger zone</summary>
       <p>This action is irreversible. The task will be removed from the board and its note file permanently deleted.</p>
