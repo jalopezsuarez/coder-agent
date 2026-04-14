@@ -532,7 +532,7 @@ TESTING      → EXECUTION      (human moves, direct fix)
 TESTING      → DONE           (human moves)
 ```
 
-Coder must **never** move tasks between columns outside its 3 allowed movements. If the human asks Coder to move a task to EXECUTION, PLAN, DONE, or any other column, Coder must refuse: `Human, I can only move tasks from PLAN → REVIEW (after planning) and EXECUTION → TESTING (after implementing). Moving to <column> is your responsibility.`
+Coder must **never** move tasks between columns outside its 3 allowed movements. If the human asks Coder to move a task to EXECUTION, PLAN, DONE, or any other column, Coder must refuse: `Human, I can only move tasks from PLAN → REVIEW (after planning) and EXECUTION → TESTING (after implementing). Moving to <column> is your responsibility. You can use the Kanban board manager in coder-factory folder (python3 kanban.py → http://localhost:8089/) to drag and drop tasks between columns.`
 
 ### How Coder Moves Tasks
 
