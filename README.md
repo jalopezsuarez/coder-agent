@@ -99,21 +99,21 @@ Coder auto-creates the full `coder-factory/` structure and indexes your project 
 
 ---
 
-## 🖥️ Kanban Board Manager Service
+## 🖥️ Kanban Board Manager WebApp
 
-A self-contained Kanban board manager at `coder-factory/kanban.py`. Zero external dependencies — pure Python 3.
+A self-contained Kanban board manager at `coder-factory/kanban.py`. Minimalist zero external dependencies — pure Python 3.
 
-**Basic start service**
+**Basic start**
 ```bash
 python3 kanban.py
 ```
 
-**Advanced start service** *(kill existing process + restart in background)*
+**Advanced start** *(kill existing process + restart in background)*
 ```bash
 pkill -f "kanban.py"; sleep 1 && python3 kanban.py 2>&1 &
 ```
 
-The service starts at `http://localhost:8089`.
+The WebApp starts at `http://localhost:8089`.
 
 **Board & Cards:**
 - GitHub-dark themed Kanban board with all 6 color-coded columns (BACKLOG, PLAN, REVIEW, EXECUTION, TESTING, DONE)
