@@ -179,23 +179,6 @@ When human says: `Coder add to C1 implement the footer of the Dashboard`
 
 > **Difference from `Coder for C<N>`**: `Coder for` processes text immediately into an INSTRUCTIONS iteration. `Coder add to` writes to HUMAN-ONLY ZONE for deferred processing — useful when accumulating multiple inputs before a state change.
 
-### 🔀 `Coder move C<N> to <column>` / `Coder move task N to <column>`
-
-Moves a task to a different Kanban column.
-
-When human says: `Coder move C1 to PLAN` or `Coder move task 1 to planning`
-
-1. Validate the target column (BACKLOG, PLAN, REVIEW, EXECUTION, TESTING, DONE). Accept case-insensitive input and common aliases (e.g., "planning" → PLAN, "review" → REVIEW, "execution" → EXECUTION, "testing" → TESTING, "done" → DONE, "backlog" → BACKLOG).
-2. Read the board to find the task's current column.
-3. **Check tags**: if the task is missing `#coder` or has `#canceled`, refuse: `Human, I cannot move C1 — it is not assigned to me (#coder missing) / is #canceled.`
-4. Validate movement is allowed per the movement rules (see Kanban Board section). Coder **cannot** move tasks to DONE — only human can.
-5. Remove the task entry from the source column.
-6. Add the task entry under the target column heading.
-7. Update `Status` and `Last updated` in the task note.
-8. Confirm: `Human, I've moved C1 from BACKLOG to PLAN.`
-
-> **Note:** Accepts `C1` or just `1` as the task identifier.
-
 ---
 
 ## Task Note Format
@@ -530,18 +513,26 @@ Entries use Obsidian wiki-links so they auto-connect to the note:
 
 ### Movement Rules
 
+**Coder can ONLY perform these 3 movements:**
+
 ```
-BACKLOG → PLAN           (human moves, or via "Coder move")
-PLAN → REVIEW            (Coder moves, after planning)
-REVIEW → PLAN            (human moves, or via "Coder move", to re-iterate)
-REVIEW → EXECUTION       (human moves, or via "Coder move", approves plan)
-EXECUTION → TESTING      (Coder moves, after implementing)
-TESTING → PLAN           (human moves, or via "Coder move", needs replanning)
-TESTING → EXECUTION      (human moves, or via "Coder move", direct fix)
-TESTING → DONE           (human moves ONLY — Coder cannot move to DONE)
+Create task  → BACKLOG        (Coder creates the task)
+PLAN         → REVIEW         (Coder moves, after planning)
+EXECUTION    → TESTING        (Coder moves, after implementing)
 ```
 
-> **"Coder move" command**: human can say `Coder move C<N> to <column>` to move tasks via the agent. Coder still **cannot** move tasks to DONE — that requires explicit human approval.
+**All other movements are human-only:**
+
+```
+BACKLOG      → PLAN           (human moves)
+REVIEW       → PLAN           (human moves, to re-iterate)
+REVIEW       → EXECUTION      (human moves, approves plan)
+TESTING      → PLAN           (human moves, needs replanning)
+TESTING      → EXECUTION      (human moves, direct fix)
+TESTING      → DONE           (human moves)
+```
+
+Coder must **never** move tasks between columns outside its 3 allowed movements. If the human asks Coder to move a task to EXECUTION, PLAN, DONE, or any other column, Coder must refuse: `Human, I can only move tasks from PLAN → REVIEW (after planning) and EXECUTION → TESTING (after implementing). Moving to <column> is your responsibility.`
 
 ### How Coder Moves Tasks
 

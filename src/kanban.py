@@ -391,7 +391,6 @@ body{font-family:var(--font);font-size:14px;color:var(--text);background:var(--b
         <div class="help-row"><code>Coder create task &lt;desc&gt;</code><span>Create task in BACKLOG</span></div>
         <div class="help-row"><code>Coder plan</code><span>Plan tasks in PLAN column</span></div>
         <div class="help-row"><code>Coder execute</code><span>Implement tasks in EXECUTION</span></div>
-        <div class="help-row"><code>Coder move C1 to PLAN</code><span>Move task between columns</span></div>
         <div class="help-row"><code>Coder add to C1 &lt;text&gt;</code><span>Append to HUMAN-ONLY ZONE</span></div>
         <div class="help-row"><code>Coder for C1 &lt;instr&gt;</code><span>Add instruction directly</span></div>
         <div class="help-row"><code>Coder status</code><span>Board summary</span></div>

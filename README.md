@@ -216,7 +216,6 @@ All commands **require** the word **"Coder"** (or **"coder"**) in your message t
 | `Coder create task <desc>` | Create a task in BACKLOG with note |
 | `Coder plan` | Plan eligible tasks in PLAN column |
 | `Coder execute` | Implement eligible tasks in EXECUTION column |
-| `Coder move C1 to PLAN` | Move task between columns |
 | `Coder add to C1 <text>` | Append text to task's HUMAN-ONLY ZONE |
 | `Coder status` | Show board summary |
 | `Coder update memory` | Re-index project knowledge base |

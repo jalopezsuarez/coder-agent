@@ -12,5 +12,4 @@ That file is the single source of truth for agent behavior, memory system, and w
 - `Coder update memory` — Re-index project knowledge base.
 - `Coder for C<N> <instruction>` — Add instruction to specific task.
 - `Coder add to C<N> <text>` — Append text to task's HUMAN-ONLY ZONE.
-- `Coder move C<N> to <column>` — Move task between columns.
 - `Coder <bug description>` — Smart detection: bug on existing task or new task.
