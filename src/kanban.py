@@ -320,11 +320,11 @@ body{font-family:var(--font);font-size:14px;color:var(--text);background:var(--b
 .md h4{font-size:1em;font-weight:600;margin:24px 0 16px;color:#e59746}
 .md h5{font-size:.875em;font-weight:600;margin:24px 0 16px}
 .md h6{font-size:.85em;font-weight:600;color:var(--text3);margin:24px 0 16px}
-.md p{margin:0 0 16px}
+.md p{margin:8px 0}
 .md blockquote{padding:0 1em;color:var(--text2);border-left:.25em solid var(--border);margin:0 0}
 .md blockquote>:first-child{margin-top:0}
 .md blockquote>:last-child{margin-bottom:0}
-.md ul,.md ol{padding-left:2em;margin:0 0 16px}
+.md ul,.md ol{padding-left:2em;margin:8px 0}
 .md li{margin-top:.25em}
 .md code{font-family:var(--mono);font-size:85%;padding:.2em .4em;background:#282a31;color:#15f844;border-radius:var(--radius-sm)}
 .md pre{font-family:var(--mono);font-size:85%;padding:16px;overflow:auto;line-height:1.45;background:var(--bg);border-radius:var(--radius);margin:0 0 16px;border:1px solid var(--border)}
