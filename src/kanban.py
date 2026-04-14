@@ -58,6 +58,8 @@ def extract_preview(txt):
             break
         if re.match(r"^---|^<!--", l.strip()):
             continue
+        if re.match(r"^>\s*Created:\s*", l):
+            continue
         if re.match(r"^#{1,4}\s+", l):
             continue
         if not l.strip():
