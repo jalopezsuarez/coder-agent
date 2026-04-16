@@ -1,0 +1,264 @@
+# CLAUDE.md
+
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+
+---
+
+## What is Coder Agent?
+
+Coder Agent is an **agent instruction system** — not a traditional software project. It's a framework that turns any LLM CLI (Claude Code, Gemini CLI, Copilot, etc.) into a disciplined software development agent. 
+
+The system operates entirely through **Markdown files**, implementing a Kanban workflow with human-in-the-loop review cycles. It maintains an AI-optimized knowledge base (memory system) and enforces strict, versioned documentation practices.
+
+**Key distinction**: This repo *defines the behavior* of an AI agent working on *other projects*. It doesn't have a build system, tests, or linting — it's pure documentation + design.
+
+---
+
+## High-Level Architecture
+
+### The Agent Brain: `CODER.md`
+
+This is the **single source of truth** for agent behavior. It contains:
+- **Identity & voice rules** — How the agent speaks, always in first person ("I've created...")
+- **Core rules** — Markdown-only, append-only versioning, token discipline, mandatory review cycles
+- **Startup sequence** — Path setup, factory structure creation, memory initialization, auto-launch Kanban Board Manager
+- **Commands** — How the agent interprets requests (create task, plan, execute, etc.)
+- **Task note format** — Structure for tracking individual tasks (C1, C2, etc.)
+- **Kanban workflow** — Column definitions, movement rules, state machine
+- **Memory system** — 7-phase indexing pipeline, hierarchical loading strategy
+
+**When to modify CODER.md**: Only when changing core agent behavior, workflow logic, or instruction sets. This is the authoritative document.
+
+### Bridge Files: `AGENTS.md` and `GEMINI.md`
+
+These are CLI-specific entry points. They tell Claude Code, Gemini CLI, or other LLMs: "Load and follow CODER.md."
+
+- **AGENTS.md** — For Claude Code, Codex CLI
+- **GEMINI.md** — For Google Gemini CLI
+
+They have minimal content and just redirect to CODER.md. Rarely modified unless CLI integration changes.
+
+### Documentation Structure: `src/` directory
+
+Contains templates and specification documents that users copy into their projects:
+
+- **`CODER.md`** — The main agent instructions (source of truth)
+- **`AGENTS.md`** — Bridge file for Claude Code / Codex CLI
+- **`architecture.md`** — Template for project-specific architecture docs
+- **`modules.md`** — Template for module registry (path, exports, dependencies)
+- **`conventions.md`** — Template for code style & patterns
+- **`dependencies.md`** — Template for packages, scripts, env vars
+- **`knowledge-graph.md`** — Template for symbol relationships & call chains
+- **`memory.md`** — Template for the main memory index
+- **`coder-board.md`** — Template for the Kanban board
+- **`task-template.md`** — Template for individual task notes
+- **`kanban.py`** — Kanban board manager (WebApp)
+
+These templates are copied by users into their `coder-factory/` when they initialize Coder for their project.
+
+### The Runtime Structure: `coder-factory/`
+
+When a user initializes Coder in their project, it auto-creates:
+
+```
+coder-factory/
+├── coder-memory/           ← AI-optimized knowledge base
+│   ├── memory.md           (always loaded)
+│   ├── architecture.md     (loaded during planning)
+│   ├── modules.md          (loaded during planning + execution)
+│   ├── conventions.md      (loaded during execution)
+│   ├── dependencies.md     (loaded on demand)
+│   └── knowledge-graph.md  (loaded for complex tasks)
+├── coder-board/
+│   └── coder-board.md      (Kanban board, compatible with Obsidian Kanban plugin)
+└── coder-tasks/            (auto-populated, one file per task)
+    ├── C1 Task title.md
+    ├── C2 Another task.md
+    └── ...
+```
+
+This structure is created *in the user's project*, not in this repo. The templates in `src/` are copied there.
+
+---
+
+## Core Concepts
+
+### Kanban Workflow
+
+Six columns representing task state:
+
+1. **BACKLOG** — New tasks, not yet prioritized (Coder/Human)
+2. **PLAN** — Tasks awaiting planning (Coder starts planning)
+3. **REVIEW** — Coder finished planning, waiting for human review (Human adds feedback)
+4. **EXECUTION** — Human approved, Coder implements code (Coder codes)
+5. **TESTING** — Implementation done, human validates (Human tests)
+6. **DONE** — Approved and complete
+
+**Movement is one column at a time** — only humans move tasks to DONE, only Coder moves to REVIEW/TESTING. This enforces review cycles.
+
+### Task Format: `C<N>`
+
+Each task has a unique ID (C1, C2, etc.) and a **clean title** (no symbols, no tech-stack dumps):
+- ✅ Good: `C1 Implement user authentication`
+- ❌ Bad: `C1 JWT+FastAPI auth module`
+
+Filenames = task titles for Obsidian wiki-link compatibility.
+
+### Append-Only Versioning
+
+Every task note tracks iterations:
+- **DEFINE #1, #2, #3...** — Functional business definitions generated by Coder as expert consultant, never modified
+- **PLANNING #1, #2, #3...** — Versioned plans, each with delta from previous
+- **EXECUTION #1, #2, #3...** — Versioned implementations
+- **FIXES #1, #2, #3...** — Versioned bug fixes
+
+This creates a **full audit trail** — every decision is timestamped and preserved.
+
+### Memory System: AI-Optimized Knowledge Base
+
+The memory is *designed for LLM consumption*, not human reading. It's:
+- **Hierarchical** — Always load main index, load detailed files on-demand
+- **Compressed** — Dense, no filler, maximum information density
+- **Incremental** — Updates only record changes (deltas), never rewrite unchanged content
+- **Domain-separated** — Frontend, backend, database, infra each in their own file
+
+**7-phase indexing pipeline** (when `Coder update memory` is called):
+1. Structure scan (folder → purpose mapping)
+2. Config extraction (package.json, tsconfig, etc.)
+3. Source parsing (functions, classes, interfaces)
+4. Resolution (import chains, call graphs)
+5. Clustering (group symbols into functional communities)
+6. Process tracing (execution flows from entry points)
+7. Compression (remove redundancy)
+
+Memory updates are **manual-only** — Coder reminds the human to update before/after execution but never auto-updates.
+
+### Human-in-the-Loop Review
+
+Every PLANNING phase goes through REVIEW before EXECUTION. Humans:
+- Write feedback in the task's `HUMAN-ONLY ZONE` section
+- Move the task back to PLAN for replanning, or to EXECUTION to approve
+- Can add functional definitions mid-execution via `Coder for C5 <instruction>`
+
+This prevents runaway executions and ensures alignment.
+
+---
+
+## Modifying Coder Agent
+
+### When to Update Files
+
+| File | When to Update |
+|------|---|
+| **CODER.md** | Core logic, workflow, rules, or command definitions change |
+| **AGENTS.md / GEMINI.md** | CLI integration changes or new bridge files needed |
+| **src/architecture.md** | Update template format or defaults for architecture docs |
+| **src/modules.md** | Update template format for module registry |
+| **src/\*.md** | Update any template when format/structure changes |
+| **src/kanban.py** | Kanban board manager WebApp |
+
+### What NOT to Modify
+
+- **Don't create source code** — This repo has no application source code. The only non-Markdown file is `src/kanban.py` (the Kanban board manager).
+- **Don't change task IDs or versioning format** — Breaking changes to versioning breaks all existing projects using Coder.
+- **Don't remove or rename sections** — HUMAN-ONLY ZONE, DEFINE, PLANNING, EXECUTION, FIXES are load-bearing; changing them breaks compatibility.
+
+### Extending Coder
+
+**Adding new commands**:
+1. Define behavior in CODER.md under "Commands" section
+2. Include clear steps, confirmation messages, and any board state changes
+3. Document in README.md if it's a major feature
+
+**Adding new memory file types**:
+1. Create template in `src/`
+2. Update CODER.md's Memory System section with loading strategy
+3. Document when it's loaded (always, during planning, on-demand, etc.)
+
+**Adding new board columns**:
+1. Define movement rules in CODER.md
+2. Update Kanban Board section with owner and description
+3. Update the workflow diagram in README.md
+
+---
+
+## Key Files to Understand
+
+| File | Purpose | Read When |
+|------|---------|-----------|
+| **README.md** | Project overview, quick start, feature list | Understanding what Coder is |
+| **CODER.md** | Complete agent behavior specification | Implementing changes, understanding workflow |
+| **AGENTS.md** | CLI bridge file | Adding new CLI support |
+| **src/task-template.md** | Task note structure | Understanding task format |
+| **src/coder-board.md** | Board template | Understanding Kanban setup |
+| **src/kanban.py** | Kanban board manager WebApp | Modifying the board manager |
+
+---
+
+## Versioning Scheme
+
+Format: `v0.YYYYMMDDHHMM`
+
+- **0** — Major version (pre-1.0, breaking changes unlikely)
+- **YYYYMMDDHHMM** — Release timestamp (e.g., 202604120800 = April 12, 2026, 08:00)
+
+Update version in:
+- CODER.md header (`# CODER v0.YYYYMMDDHHMM`)
+- README.md badge
+
+---
+
+## Common Tasks
+
+### Understanding a Feature Request
+
+1. Read the relevant command in CODER.md (Commands section)
+2. Follow the numbered steps to understand the workflow
+3. Check which files are created/modified
+
+### Fixing a Workflow Bug
+
+1. Read the complete workflow diagram in CODER.md
+2. Locate the phase where the bug occurs
+3. Check movement rules and state conditions
+4. Verify the step is correctly sequenced
+
+### Adding a New Template
+
+1. Create the `.md` file in `src/`
+2. Add `> Updated: ---` at the top
+3. Include comments explaining each section
+4. Reference it in README.md and CODER.md memory section
+
+### Updating Documentation
+
+- Keep it concise and linked
+- Always use the translated word "Human" (Humano, Humain, etc.) in voice rules
+- All timestamps must be `YYYY-MM-DD HH:MM` format
+- Use Markdown tables for structured data
+
+---
+
+## Important Notes for Future Instances
+
+1. **Coder is a specification, not code** — This repo documents how an AI agent should behave. It's purely Markdown.
+
+2. **Breaking changes are expensive** — Each change to CODER.md, versioning format, or task structure affects all users. Test with the README's Quick Start before committing.
+
+3. **Append-only is non-negotiable** — Never suggest rewriting PLANNING #1 or removing DEFINE. This breaks the audit trail and loses version history.
+
+4. **Memory is AI-optimized, not human-readable** — It's dense and compressed. That's intentional. Don't "improve" it by adding explanations or examples.
+
+5. **The 'Coder' prefix is a feature** — It lets humans interleave Coder instructions with regular conversation. Don't suggest removing it.
+
+6. **Obsidian compatibility matters** — Filenames = titles because of wiki-links `[[C1 Title]]`. Changing this breaks the Kanban plugin integration.
+
+7. **This repo is the canonical source** — Users copy CODER.md and AGENTS.md to their projects. Changes here should be carefully considered, tested, and versioned.
+
+---
+
+## See Also
+
+- **README.md** — Complete feature overview and quick start
+- **CODER.md** — The complete specification (all commands, workflows, memory system)
+- `src/CODER.md` — Source file (single source of truth)

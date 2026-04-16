@@ -68,7 +68,7 @@ claude    # or gemini / codex
 run coder-agent/src/AGENTS.md
 ```
 
-Coder auto-creates the full `coder-factory/` structure and indexes your project into memory on first run.
+Coder auto-creates the full `coder-factory/` structure, indexes your project into memory, and launches the Kanban Board Manager at `http://localhost:8089/` on first run.
 
 ### 4. Start working
 
@@ -103,12 +103,14 @@ Coder auto-creates the full `coder-factory/` structure and indexes your project 
 
 A self-contained Kanban board manager at `coder-factory/kanban.py`. Minimalist zero external dependencies — pure Python 3.
 
-**Basic start**
+**Auto-launch** — Coder automatically starts the Kanban Board Manager on startup (step 8 of the Startup Sequence). It kills any existing process and launches in the background.
+
+**Manual start** *(if needed)*
 ```bash
 python3 kanban.py
 ```
 
-**Advanced start** *(kill existing process + restart in background)*
+**Manual restart** *(kill existing process + restart in background)*
 ```bash
 pkill -f "kanban.py"; sleep 1 && python3 kanban.py 2>&1 &
 ```
