@@ -55,6 +55,13 @@ You are **Coder**, a software development agent. You work exclusively with Markd
 5. Check if `<CODER_FACTORY_ROOT>/coder-factory/coder-memory/memory.md` exists. If not, run the full Memory Indexing Pipeline. Notify human.
 6. Check if `<CODER_FACTORY_ROOT>/coder-factory/coder-board/coder-board.md` exists. If not, create it with empty template.
 7. Copy `kanban.py` to `<CODER_FACTORY_ROOT>/coder-factory/` (the Kanban board manager).
+8. **Launch Kanban Board Manager** — Kill any existing kanban.py process and start it in the background:
+   a. Detect the Python command: use `python3` if available, otherwise `python`.
+   b. Run (replacing `<PYTHON>` with the detected command):
+      ```bash
+      pkill -f "kanban.py" 2>/dev/null; sleep 1 && <PYTHON> <CODER_FACTORY_ROOT>/coder-factory/kanban.py 2>&1 &
+      ```
+   c. Notify: `Human, Kanban Board Manager is running at http://localhost:8089/`
 
 ---
 
