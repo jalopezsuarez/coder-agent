@@ -18,13 +18,13 @@
 
 ---
 
-## INSTRUCTIONS
+## DEFINE
 
 ### HUMAN-ONLY ZONE
 
 ```
-Write your instructions here.
-Coder will process this into INSTRUCTIONS and clear it on next state change.
+Write your questions, doubts, or additional context here.
+Coder will process this into DEFINE and clear it on next state change.
 ```
 
 ---

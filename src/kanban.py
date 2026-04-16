@@ -830,7 +830,7 @@ function renderMd(txt){
     if(/^(\s*[-*_]\s*){3,}$/.test(l.trim())){fl();html+='<hr>';continue;}
     var hm=l.match(/^(#{1,6})\s+(.+)/);
     if(hm){fl();var raw=hm[2],aid;
-      var im=raw.match(/^(?:SUMMARY\s+-\s+)?(INSTRUCTIONS|PLANNING|EXECUTION|FIXES)\s+#(\d+)/);
+      var im=raw.match(/^(?:SUMMARY\s+-\s+)?(DEFINE|PLANNING|EXECUTION|FIXES)\s+#(\d+)/);
       if(im) aid=im[1].toLowerCase().replace(/\s+/g,'-')+'-'+im[2];
       else aid=raw.replace(/[\u2014\u2013]/g,'').replace(/[^\w\s-]/g,'').trim().toLowerCase().replace(/\s+/g,'-');
       html+='<h'+hm[1].length+' id="'+esc(aid)+'">'+il(raw)+'</h'+hm[1].length+'>';continue;}

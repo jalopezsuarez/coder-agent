@@ -174,7 +174,7 @@ The WebApp starts at `http://localhost:8089`.
   │                              │                              │
   │  "Coder plan"                │                              │
   │─────────────────────────────>│                              │
-  │                              │──── INSTRUCTIONS #1 ───────> │
+  │                              │──── DEFINE #2 ──────────────> │
   │                              │──── PLANNING #2 (delta) ───> │
   │                              │──── move to REVIEW ────────> │
   │                              │                              │
@@ -213,13 +213,14 @@ All commands **require** the word **"Coder"** (or **"coder"**) in your message t
 
 | Command | Description |
 |---------|-------------|
-| `Coder create task <desc>` | Create a task in BACKLOG with note |
+| `Coder create task <desc>` | Create a task in BACKLOG with DEFINE #1 (business definition) |
+| `Coder define <question>` | Business consultation on a task (expert, non-technical) |
 | `Coder plan` | Plan eligible tasks in PLAN column |
 | `Coder execute` | Implement eligible tasks in EXECUTION column |
 | `Coder add to C1 <text>` | Append text to task's HUMAN-ONLY ZONE |
 | `Coder status` | Show board summary |
 | `Coder update memory` | Re-index project knowledge base |
-| `Coder for C5 <instruction>` | Add instruction to specific task |
+| `Coder for C5 <instruction>` | Add functional definition to specific task |
 | `Coder <bug description>` | Smart detection: bug or new task? |
 
 ### Tags
@@ -257,9 +258,9 @@ Every task gets a dedicated note in `coder-tasks/` with this structure:
 ├──────────────────────────────────┤
 │ TABLE OF CONTENTS    ← Auto      │  Clickable navigation index.
 ├──────────────────────────────────┤
-│ INSTRUCTIONS         ← Human     │  HUMAN-ONLY ZONE + processed
-│   HUMAN-ONLY ZONE   ← writes     │  iterations. You write here,
-│   INSTRUCTIONS #1..N ← Processed │  Coder processes and restores.
+│ DEFINE               ← Coder     │  HUMAN-ONLY ZONE + business
+│   HUMAN-ONLY ZONE   ← Human     │  consultation. You write here,
+│   DEFINE #1..N       ← Consultant│  Coder defines as expert.
 ├──────────────────────────────────┤
 │ PLANNING #1..N       ← Coder     │  Versioned plans.
 ├──────────────────────────────────┤
@@ -271,17 +272,17 @@ Every task gets a dedicated note in `coder-tasks/` with this structure:
 
 ### SUMMARY
 
-The `SUMMARY` section always reflects the **last action** performed on the task. After every iteration (INSTRUCTIONS, PLANNING, EXECUTION, or FIXES), Coder **overwrites** SUMMARY with a matching entry: `### SUMMARY - PLANNING #1` + brief description. This gives an instant snapshot of where the task stands.
+The `SUMMARY` section always reflects the **last action** performed on the task. After every iteration (DEFINE, PLANNING, EXECUTION, or FIXES), Coder **overwrites** SUMMARY with a matching entry: `### SUMMARY - PLANNING #1` + brief description. This gives an instant snapshot of where the task stands.
 
 ### HUMAN-ONLY ZONE Flow
 
-1. Human writes in HUMAN-ONLY ZONE inside INSTRUCTIONS — replacing the placeholder code block (manually or via `Coder for C5 ...`).
-2. On next state change, Coder processes it into `INSTRUCTIONS #(N+1)` with `> Created: YYYY-MM-DD HH:MM`.
+1. Human writes in HUMAN-ONLY ZONE inside DEFINE — replacing the placeholder code block (manually or via `Coder for C5 ...`).
+2. On next state change, Coder processes it into `DEFINE #(N+1)` (as expert business consultant) with `> Created: YYYY-MM-DD HH:MM`.
 3. HUMAN-ONLY ZONE is cleared and the placeholder code block is restored:
    ````
    ```
-   Write your instructions here.
-   Coder will process this into INSTRUCTIONS and clear it on next state change.
+   Write your questions, doubts, or additional context here.
+   Coder will process this into DEFINE and clear it on next state change.
    ```
    ````
 4. SUMMARY and TABLE OF CONTENTS are updated.
@@ -291,7 +292,7 @@ The `SUMMARY` section always reflects the **last action** performed on the task.
 - **Filenames match titles** — `C1 Implement user authentication.md` links directly from the Kanban board via `[[C1 Implement user authentication]]`.
 - **Titles are clean** — No symbols, no tech dumps. Just a clear summary: "Implement user authentication", not "JS+JWT+Fastify auth module".
 - **Tasks use C<N> IDs** — simple incremental numbering (C1, C2, C3...) for clear tracking.
-- **Strict section containment** — Each iteration type goes ONLY in its matching section (INSTRUCTIONS under `## INSTRUCTIONS`, PLANNING under `## PLANNING`, etc.). Never mixed.
+- **Strict section containment** — Each iteration type goes ONLY in its matching section (DEFINE under `## DEFINE`, PLANNING under `## PLANNING`, etc.). Never mixed.
 - **Newest first** — Iterations within each section are ordered most recent at the top, oldest at the bottom (#3, #2, #1).
 - **Clean headings, timestamp below** — Headings use `### PLANNING #1` (no timestamp), with `> Created: YYYY-MM-DD HH:MM` on the next line. This produces simple anchor IDs (`#planning-1`) that work in Obsidian and all Markdown renderers.
 - **Notes are incremental** — PLANNING #1 is never modified; #2 is added above it. All content preserved in full.
